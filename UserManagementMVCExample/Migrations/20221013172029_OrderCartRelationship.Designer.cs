@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UserManagementMVCExample.Data;
 
@@ -11,9 +12,10 @@ using UserManagementMVCExample.Data;
 namespace UserManagementMVCExample.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221013172029_OrderCartRelationship")]
+    partial class OrderCartRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,36 +24,6 @@ namespace UserManagementMVCExample.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("BeverageCart", b =>
-                {
-                    b.Property<int>("BeveragesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CartsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("BeveragesId", "CartsId");
-
-                    b.HasIndex("CartsId");
-
-                    b.ToTable("BeverageCart", "Identity");
-                });
-
-            modelBuilder.Entity("CartDessert", b =>
-                {
-                    b.Property<int>("CartsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DessertsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CartsId", "DessertsId");
-
-                    b.HasIndex("DessertsId");
-
-                    b.ToTable("CartDessert", "Identity");
-                });
 
             modelBuilder.Entity("CartSushi", b =>
                 {
@@ -66,21 +38,6 @@ namespace UserManagementMVCExample.Migrations
                     b.HasIndex("SushisId");
 
                     b.ToTable("CartSushi", "Identity");
-                });
-
-            modelBuilder.Entity("ComboSushi", b =>
-                {
-                    b.Property<int>("CombosId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SushisId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CombosId", "SushisId");
-
-                    b.HasIndex("SushisId");
-
-                    b.ToTable("ComboSushi", "Identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -303,36 +260,6 @@ namespace UserManagementMVCExample.Migrations
                     b.ToTable("User", "Identity");
                 });
 
-            modelBuilder.Entity("UserManagementMVCExample.Models.Beverage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Milliliters")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Beverage", "Identity");
-                });
-
             modelBuilder.Entity("UserManagementMVCExample.Models.Cart", b =>
                 {
                     b.Property<int>("Id")
@@ -356,56 +283,6 @@ namespace UserManagementMVCExample.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Carts", "Identity");
-                });
-
-            modelBuilder.Entity("UserManagementMVCExample.Models.Combo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Combo", "Identity");
-                });
-
-            modelBuilder.Entity("UserManagementMVCExample.Models.Dessert", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Grams")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Dessert", "Identity");
                 });
 
             modelBuilder.Entity("UserManagementMVCExample.Models.Order", b =>
@@ -506,56 +383,11 @@ namespace UserManagementMVCExample.Migrations
                     b.ToTable("Sushis", "Identity");
                 });
 
-            modelBuilder.Entity("BeverageCart", b =>
-                {
-                    b.HasOne("UserManagementMVCExample.Models.Beverage", null)
-                        .WithMany()
-                        .HasForeignKey("BeveragesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("UserManagementMVCExample.Models.Cart", null)
-                        .WithMany()
-                        .HasForeignKey("CartsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("CartDessert", b =>
-                {
-                    b.HasOne("UserManagementMVCExample.Models.Cart", null)
-                        .WithMany()
-                        .HasForeignKey("CartsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("UserManagementMVCExample.Models.Dessert", null)
-                        .WithMany()
-                        .HasForeignKey("DessertsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("CartSushi", b =>
                 {
                     b.HasOne("UserManagementMVCExample.Models.Cart", null)
                         .WithMany()
                         .HasForeignKey("CartsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("UserManagementMVCExample.Models.Sushi", null)
-                        .WithMany()
-                        .HasForeignKey("SushisId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ComboSushi", b =>
-                {
-                    b.HasOne("UserManagementMVCExample.Models.Combo", null)
-                        .WithMany()
-                        .HasForeignKey("CombosId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

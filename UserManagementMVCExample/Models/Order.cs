@@ -18,6 +18,12 @@ namespace UserManagementMVCExample.Models
         
         [Required]
         public Payment Payment { get; set; }
+
+        [ForeignKey("Cart")]
+        public int CartID { get; set; }
+
+        [Required]
+        public Cart Cart { get; set; }
         public ApplicationUser Customer { get; set; }
     }
 }
