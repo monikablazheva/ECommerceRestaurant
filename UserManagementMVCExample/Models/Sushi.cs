@@ -6,7 +6,7 @@ namespace UserManagementMVCExample.Models
     public class Sushi
     {
         [Key]
-        private int Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string Name { get; set; }

@@ -15,6 +15,6 @@ namespace UserManagementMVCExample.Models
         [Required]
         public ApplicationUser Customer { get; set; }
 
-        public IEnumerable<Sushi> SushiProducts { get; set; }
+        public IEnumerable<Sushi> Sushis { get; set; }
     }
 }

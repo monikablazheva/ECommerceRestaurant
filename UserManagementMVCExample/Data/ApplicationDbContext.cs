@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using System.Text;
 using UserManagementMVCExample.Models;
 
@@ -47,5 +48,10 @@ namespace UserManagementMVCExample.Data
                 entity.ToTable("UserTokens");
             });
         }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<Sushi> Sushis { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace UserManagementMVCExample.Models
         [Required]
         public PaymentType PaymentType { get; set; }
 
-        public CreditCardAttribute CreditCard { get; set; }
+        public string CreditCard { get; set; }
     }
     public enum PaymentType { Card, Cash}
 }

@@ -28,6 +28,31 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("SuperAdmin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bi bi-gear"></i> Management
+                                </a>
+
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" asp-controller="UserRoles" asp-action="Index"><i class="bi bi-camera-reels"></i>Users</a>
+                                    <a class="dropdown-item" asp-controller="RoleManager" asp-action="Index"><i class="bi bi-headset"></i>Roles</a>
+                                </div>
+                            </li>
+                        }
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bi bi-gear"></i> Management
+                                </a> 
+
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" asp-controller="Sushis" asp-action="Index"><i class="bi bi-camera-reels"></i>Sushis</a>
+                                </div>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
