@@ -13,7 +13,7 @@ namespace UserManagementMVCExample.Models
         public byte[] ProfilePicture { get; set; }
         public int? CartID { get; set; }
         public Cart Cart { get; set; }
-        public IEnumerable<Order> CompletedOrders { get; set; }
+        public ICollection<Order> CompletedOrders { get; set; }
 
     }
 }

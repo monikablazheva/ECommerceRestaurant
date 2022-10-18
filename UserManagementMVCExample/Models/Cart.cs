@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace UserManagementMVCExample.Models
 {
@@ -9,10 +11,14 @@ namespace UserManagementMVCExample.Models
         public int Id { get; set; }
         public int SushiProductsCount { get; set; }
 
-        [Range(0, 1000000, ErrorMessage = "Price must be between {0} and {1}.")]
+        [Range(0, 1000000, ErrorMessage = "Price must be between 0 and 1000000.")]
+        [DataType(DataType.Currency)]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal Price { get; set; }
 
-        [Range(0, 1000000, ErrorMessage = "Total price must be between {0} and {1}.")]
+        [Range(0, 1000000, ErrorMessage = "Price must be between 0 and 1000000.")]
+        [DataType(DataType.Currency)]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal Total { get; set; }
         public int ApplicationUserID { get; set; }
 
@@ -21,8 +27,8 @@ namespace UserManagementMVCExample.Models
 
         public Order Order { get; set; }
 
-        public IEnumerable<Sushi> Sushis { get; set; }
-        public IEnumerable<Beverage> Beverages { get; set; }
-        public IEnumerable<Dessert> Desserts { get; set; }
+        public ICollection<Sushi> Sushis { get; set; }
+        public ICollection<Beverage> Beverages { get; set; }
+        public ICollection<Dessert> Desserts { get; set; }
     }
 }

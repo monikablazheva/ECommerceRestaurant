@@ -1,0 +1,164 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using UserManagementMVCExample.Data;
+using UserManagementMVCExample.Enums;
+using UserManagementMVCExample.Models;
+
+namespace UserManagementMVCExample.Controllers
+{
+    [Authorize(Roles = "SuperAdmin, Admin")]
+    public class DessertsController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+
+        public DessertsController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        // GET: Desserts
+        public async Task<IActionResult> Index()
+        {
+              return View(await _context.Dessert.ToListAsync());
+        }
+
+        // GET: Desserts/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null || _context.Dessert == null)
+            {
+                return NotFound();
+            }
+
+            var dessert = await _context.Dessert
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (dessert == null)
+            {
+                return NotFound();
+            }
+
+            return View(dessert);
+        }
+
+        // GET: Desserts/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Desserts/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Grams,Price")] Dessert dessert)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(dessert);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(dessert);
+        }
+
+        // GET: Desserts/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null || _context.Dessert == null)
+            {
+                return NotFound();
+            }
+
+            var dessert = await _context.Dessert.FindAsync(id);
+            if (dessert == null)
+            {
+                return NotFound();
+            }
+            return View(dessert);
+        }
+
+        // POST: Desserts/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Grams,Price")] Dessert dessert)
+        {
+            if (id != dessert.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(dessert);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!DessertExists(dessert.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(dessert);
+        }
+
+        // GET: Desserts/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null || _context.Dessert == null)
+            {
+                return NotFound();
+            }
+
+            var dessert = await _context.Dessert
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (dessert == null)
+            {
+                return NotFound();
+            }
+
+            return View(dessert);
+        }
+
+        // POST: Desserts/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            if (_context.Dessert == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Dessert'  is null.");
+            }
+            var dessert = await _context.Dessert.FindAsync(id);
+            if (dessert != null)
+            {
+                _context.Dessert.Remove(dessert);
+            }
+            
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool DessertExists(int id)
+        {
+          return _context.Dessert.Any(e => e.Id == id);
+        }
+    }
+}

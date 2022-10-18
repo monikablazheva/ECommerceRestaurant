@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using UserManagementMVCExample.Data;
+using UserManagementMVCExample.Enums;
 using UserManagementMVCExample.Models;
 
 namespace UserManagementMVCExample.Controllers
 {
-
+    [Authorize(Roles = "SuperAdmin, Admin")]
     public class SushisController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -27,7 +29,7 @@ namespace UserManagementMVCExample.Controllers
         }
 
         // GET: Sushis/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id) //Read GET
         {
             if (id == null || _context.Sushis == null)
             {
@@ -44,7 +46,7 @@ namespace UserManagementMVCExample.Controllers
         }
 
         // GET: Sushis/Create
-        public IActionResult Create()
+        public IActionResult Create() //Create Page
         {
             return View();
         }
@@ -54,7 +56,7 @@ namespace UserManagementMVCExample.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Count,Type")] Sushi sushi)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Count,Type,Price")] Sushi sushi) //Create POST
         {
             if (ModelState.IsValid)
             {
@@ -66,7 +68,7 @@ namespace UserManagementMVCExample.Controllers
         }
 
         // GET: Sushis/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id) //Edit page
         {
             if (id == null || _context.Sushis == null)
             {
@@ -86,7 +88,7 @@ namespace UserManagementMVCExample.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Count,Type")] Sushi sushi)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Count,Type,Price")] Sushi sushi) //Edit POST
         {
             if (id != sushi.Id)
             {
@@ -117,7 +119,7 @@ namespace UserManagementMVCExample.Controllers
         }
 
         // GET: Sushis/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id) //Delete Page
         {
             if (id == null || _context.Sushis == null)
             {
@@ -137,7 +139,7 @@ namespace UserManagementMVCExample.Controllers
         // POST: Sushis/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id) //Delete POST
         {
             if (_context.Sushis == null)
             {

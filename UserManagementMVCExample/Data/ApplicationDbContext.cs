@@ -53,5 +53,8 @@ namespace UserManagementMVCExample.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Sushi> Sushis { get; set; }
+        public DbSet<UserManagementMVCExample.Models.Beverage> Beverage { get; set; }
+        public DbSet<UserManagementMVCExample.Models.Dessert> Dessert { get; set; }
+        public DbSet<UserManagementMVCExample.Models.Combo> Combo { get; set; }
     }
 }
