@@ -47,14 +47,17 @@ namespace UserManagementMVCExample.Data
             {
                 entity.ToTable("UserTokens");
             });
+            builder.Entity<SushiAssignmentViewModel>()
+                .HasKey(s => new { s.SushiID, s.ComboID });
         }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Sushi> Sushis { get; set; }
-        public DbSet<UserManagementMVCExample.Models.Beverage> Beverage { get; set; }
-        public DbSet<UserManagementMVCExample.Models.Dessert> Dessert { get; set; }
-        public DbSet<UserManagementMVCExample.Models.Combo> Combo { get; set; }
+        public DbSet<Beverage> Beverages { get; set; }
+        public DbSet<Dessert> Desserts { get; set; }
+        public DbSet<Combo> Combos { get; set; }
+        public DbSet<SushiAssignmentViewModel> SushiAssignments { get; set; }
     }
 }

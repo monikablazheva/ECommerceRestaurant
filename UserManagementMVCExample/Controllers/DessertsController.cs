@@ -25,18 +25,18 @@ namespace UserManagementMVCExample.Controllers
         // GET: Desserts
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Dessert.ToListAsync());
+              return View(await _context.Desserts.ToListAsync());
         }
 
         // GET: Desserts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Dessert == null)
+            if (id == null || _context.Desserts == null)
             {
                 return NotFound();
             }
 
-            var dessert = await _context.Dessert
+            var dessert = await _context.Desserts
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (dessert == null)
             {
@@ -71,12 +71,12 @@ namespace UserManagementMVCExample.Controllers
         // GET: Desserts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Dessert == null)
+            if (id == null || _context.Desserts == null)
             {
                 return NotFound();
             }
 
-            var dessert = await _context.Dessert.FindAsync(id);
+            var dessert = await _context.Desserts.FindAsync(id);
             if (dessert == null)
             {
                 return NotFound();
@@ -122,12 +122,12 @@ namespace UserManagementMVCExample.Controllers
         // GET: Desserts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Dessert == null)
+            if (id == null || _context.Desserts == null)
             {
                 return NotFound();
             }
 
-            var dessert = await _context.Dessert
+            var dessert = await _context.Desserts
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (dessert == null)
             {
@@ -142,14 +142,14 @@ namespace UserManagementMVCExample.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Dessert == null)
+            if (_context.Desserts == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Dessert'  is null.");
             }
-            var dessert = await _context.Dessert.FindAsync(id);
+            var dessert = await _context.Desserts.FindAsync(id);
             if (dessert != null)
             {
-                _context.Dessert.Remove(dessert);
+                _context.Desserts.Remove(dessert);
             }
             
             await _context.SaveChangesAsync();
@@ -158,7 +158,7 @@ namespace UserManagementMVCExample.Controllers
 
         private bool DessertExists(int id)
         {
-          return _context.Dessert.Any(e => e.Id == id);
+          return _context.Desserts.Any(e => e.Id == id);
         }
     }
 }

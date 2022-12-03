@@ -21,8 +21,9 @@ namespace UserManagementMVCExample.Models
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Price { get; set; }
 
-        [Required]
+        public string ImageURL { get; set; }
         public ICollection<Sushi> Sushis { get; set; }
+        public ICollection<SushiAssignmentViewModel> SushiAssignments { get; set; }
 
     }
 }

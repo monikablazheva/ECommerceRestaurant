@@ -12,8 +12,8 @@ using UserManagementMVCExample.Data;
 namespace UserManagementMVCExample.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221018144257_ICol")]
-    partial class ICol
+    [Migration("20221022165620_SushiAssignments")]
+    partial class SushiAssignments
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -332,7 +332,7 @@ namespace UserManagementMVCExample.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Beverage", "Identity");
+                    b.ToTable("Beverages", "Identity");
                 });
 
             modelBuilder.Entity("UserManagementMVCExample.Models.Cart", b =>
@@ -380,7 +380,7 @@ namespace UserManagementMVCExample.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Combo", "Identity");
+                    b.ToTable("Combos", "Identity");
                 });
 
             modelBuilder.Entity("UserManagementMVCExample.Models.Dessert", b =>
@@ -407,7 +407,7 @@ namespace UserManagementMVCExample.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Dessert", "Identity");
+                    b.ToTable("Desserts", "Identity");
                 });
 
             modelBuilder.Entity("UserManagementMVCExample.Models.Order", b =>
@@ -506,6 +506,21 @@ namespace UserManagementMVCExample.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Sushis", "Identity");
+                });
+
+            modelBuilder.Entity("UserManagementMVCExample.Models.SushiAssignmentViewModel", b =>
+                {
+                    b.Property<int>("SushiID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ComboID")
+                        .HasColumnType("int");
+
+                    b.HasKey("SushiID", "ComboID");
+
+                    b.HasIndex("ComboID");
+
+                    b.ToTable("SushiAssignments", "Identity");
                 });
 
             modelBuilder.Entity("BeverageCart", b =>
@@ -664,6 +679,25 @@ namespace UserManagementMVCExample.Migrations
                     b.Navigation("Customer");
                 });
 
+            modelBuilder.Entity("UserManagementMVCExample.Models.SushiAssignmentViewModel", b =>
+                {
+                    b.HasOne("UserManagementMVCExample.Models.Combo", "Combo")
+                        .WithMany("SushiAssignments")
+                        .HasForeignKey("ComboID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("UserManagementMVCExample.Models.Sushi", "Sushi")
+                        .WithMany("SushiAssignments")
+                        .HasForeignKey("SushiID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Combo");
+
+                    b.Navigation("Sushi");
+                });
+
             modelBuilder.Entity("UserManagementMVCExample.Models.ApplicationUser", b =>
                 {
                     b.Navigation("CompletedOrders");
@@ -677,10 +711,20 @@ namespace UserManagementMVCExample.Migrations
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("UserManagementMVCExample.Models.Combo", b =>
+                {
+                    b.Navigation("SushiAssignments");
+                });
+
             modelBuilder.Entity("UserManagementMVCExample.Models.Payment", b =>
                 {
                     b.Navigation("Order")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("UserManagementMVCExample.Models.Sushi", b =>
+                {
+                    b.Navigation("SushiAssignments");
                 });
 #pragma warning restore 612, 618
         }

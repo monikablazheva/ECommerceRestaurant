@@ -33,27 +33,27 @@
                         <tr>
                             @{
                                 int cnt = 0;
-                                List<Sushi> sushis = ViewBag.Sushis;
+                                List<AssignedSushiDataViewModel> sushis = ViewBag.Sushis;
 
                                 foreach (var sushi in sushis)
                                 {
-                                    if (cnt++ % 3 == 0)
+                                    if (cnt++ % 1 == 0)
                                     {
                                     @:</tr><tr>
                                     }
                                     @:<td>
-                                        <input type="checkbox"
-                                               name="selectedCourses"
-                                               value="@sushi.Id"
-                                               @(Html.Raw(course.Assigned ? "checked=\"checked\"" : "")) />
-                                        @course.CourseID @:  @course.Title
+                                        <input class="form-check-input" type="checkbox"
+                                               name="selectedSushis"
+                                               value="@sushi.SushiID"
+                                               @(Html.Raw(sushi.Assigned ? "checked=\"checked\"" : "")) />
+                                        @sushi.SushiID @:  @sushi.Name
                                     @:</td>
                                 }
-                            @:</tr>
-                            }
-                        </table>
-                    </div>
+                        @:</tr>
+                        }
+                    </table>
                 </div>
+            </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

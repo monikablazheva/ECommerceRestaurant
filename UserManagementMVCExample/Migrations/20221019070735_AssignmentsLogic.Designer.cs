@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UserManagementMVCExample.Data;
 
@@ -11,9 +12,10 @@ using UserManagementMVCExample.Data;
 namespace UserManagementMVCExample.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221019070735_AssignmentsLogic")]
+    partial class AssignmentsLogic
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -315,9 +317,6 @@ namespace UserManagementMVCExample.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("ImageURL")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<int>("Milliliters")
                         .HasColumnType("int");
 
@@ -333,7 +332,7 @@ namespace UserManagementMVCExample.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Beverages", "Identity");
+                    b.ToTable("Beverage", "Identity");
                 });
 
             modelBuilder.Entity("UserManagementMVCExample.Models.Cart", b =>
@@ -372,9 +371,6 @@ namespace UserManagementMVCExample.Migrations
                     b.Property<int>("Count")
                         .HasColumnType("int");
 
-                    b.Property<string>("ImageURL")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -384,7 +380,7 @@ namespace UserManagementMVCExample.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Combos", "Identity");
+                    b.ToTable("Combo", "Identity");
                 });
 
             modelBuilder.Entity("UserManagementMVCExample.Models.Dessert", b =>
@@ -402,9 +398,6 @@ namespace UserManagementMVCExample.Migrations
                     b.Property<int>("Grams")
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("ImageURL")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -414,7 +407,7 @@ namespace UserManagementMVCExample.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Desserts", "Identity");
+                    b.ToTable("Dessert", "Identity");
                 });
 
             modelBuilder.Entity("UserManagementMVCExample.Models.Order", b =>
@@ -500,9 +493,6 @@ namespace UserManagementMVCExample.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("ImageURL")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -518,7 +508,7 @@ namespace UserManagementMVCExample.Migrations
                     b.ToTable("Sushis", "Identity");
                 });
 
-            modelBuilder.Entity("UserManagementMVCExample.Models.SushiAssignmentViewModel", b =>
+            modelBuilder.Entity("UserManagementMVCExample.Models.SushiAssignment", b =>
                 {
                     b.Property<int>("SushiID")
                         .HasColumnType("int");
@@ -530,7 +520,7 @@ namespace UserManagementMVCExample.Migrations
 
                     b.HasIndex("ComboID");
 
-                    b.ToTable("SushiAssignments", "Identity");
+                    b.ToTable("SushiAssignment", "Identity");
                 });
 
             modelBuilder.Entity("BeverageCart", b =>
@@ -689,10 +679,10 @@ namespace UserManagementMVCExample.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("UserManagementMVCExample.Models.SushiAssignmentViewModel", b =>
+            modelBuilder.Entity("UserManagementMVCExample.Models.SushiAssignment", b =>
                 {
                     b.HasOne("UserManagementMVCExample.Models.Combo", "Combo")
-                        .WithMany("SushiAssignments")
+                        .WithMany()
                         .HasForeignKey("ComboID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -719,11 +709,6 @@ namespace UserManagementMVCExample.Migrations
                         .IsRequired();
 
                     b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("UserManagementMVCExample.Models.Combo", b =>
-                {
-                    b.Navigation("SushiAssignments");
                 });
 
             modelBuilder.Entity("UserManagementMVCExample.Models.Payment", b =>

@@ -27,6 +27,8 @@ namespace UserManagementMVCExample.Models
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Price { get; set; }
 
+        public byte[] ImageURL { get; set; }
+
         public ICollection<Cart> Carts { get; set; }
     }
     public enum BeverageType { Alcoholic, NonAlcoholic }

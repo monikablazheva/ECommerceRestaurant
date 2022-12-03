@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using UserManagementMVCExample.Data;
+using UserManagementMVCExample.Enums;
 using UserManagementMVCExample.Models;
 
 namespace UserManagementMVCExample.Controllers
 {
+    [Authorize(Roles = "SuperAdmin, Admin")]
     public class CombosController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,20 +23,41 @@ namespace UserManagementMVCExample.Controllers
         }
 
         // GET: Combos
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id, int? sushiID)
         {
-              return View(await _context.Combo.ToListAsync());
+            var viewModel = new ComboIndexDataViewModel();
+            viewModel.Combos = await _context.Combos
+                  .Include(c => c.SushiAssignments)
+                    .ThenInclude(c => c.Sushi)
+                  .OrderBy(c => c.Name)
+                  .ToListAsync();
+
+            if (id != null)
+            {
+                ViewData["ComboID"] = id.Value;
+                Combo combo = viewModel.Combos.Where(
+                    c => c.Id == id.Value).Single();
+                viewModel.Sushis = combo.SushiAssignments.Select(s => s.Sushi);
+            }
+
+            if (sushiID != null)
+            {
+                ViewData["SuhsiID"] = sushiID.Value;
+                var selectedSushis = viewModel.Sushis.Where(x => x.Id == sushiID).Single();
+            }
+
+            return View(viewModel);
         }
 
         // GET: Combos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Combo == null)
+            if (id == null || _context.Combos == null)
             {
                 return NotFound();
             }
 
-            var combo = await _context.Combo
+            var combo = await _context.Combos
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (combo == null)
             {
@@ -46,6 +70,9 @@ namespace UserManagementMVCExample.Controllers
         // GET: Combos/Create
         public IActionResult Create()
         {
+            var combo = new Combo();
+            combo.SushiAssignments = new List<SushiAssignmentViewModel>();
+            PopulateAssignedSushiData(combo);
             return View();
         }
 
@@ -54,23 +81,21 @@ namespace UserManagementMVCExample.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Count,Price")] Combo combo, string[] selectedSushis)
+        public async Task<IActionResult> Create([Bind("Id,Name,Count,Price,ImageURL")] Combo combo, string[] selectedSushis)
         {
             try
             {
                 if (selectedSushis != null)
                 {
-                    combo.Sushis = new List<Sushi>();
+                    combo.SushiAssignments = new List<SushiAssignmentViewModel>();
                     foreach (var sushi in selectedSushis)
                     {
-                        var sushiToAdd = new Sushi { Id = int.Parse(sushi) };
-                        combo.Sushis.Add(sushiToAdd);
+                        var sushiToAdd = new SushiAssignmentViewModel { ComboID = combo.Id, SushiID = int.Parse(sushi) };
+                        combo.SushiAssignments.Add(sushiToAdd);
                     }
                 }
                 if (ModelState.IsValid)
                 {
-                    //var c = new Combo { Name = combo.Name };
-                    //AddOrUpdateSushis(c, combo.Sushis);
                     _context.Add(combo);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
@@ -84,34 +109,24 @@ namespace UserManagementMVCExample.Controllers
                     "Try again, and if the problem persists " +
                     "see your system administrator.");
             }
+            PopulateAssignedSushiData(combo);
             return View(combo);
         }
-        /*private void AddOrUpdateSushis(Combo combo, IEnumerable<Sushi> sushis)
-        {
-            if (sushis != null)
-            {
-                foreach (var sushi in sushis)
-                {
-                    var sushiToAdd = new Sushi { Id = sushi.Id };
-                    _context.Sushis.Attach(sushiToAdd);
-                    combo.Sushis.Add(sushiToAdd);
-                }
-            }
-        }*/
 
         // GET: Combos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Combo == null)
+            if (id == null || _context.Combos == null)
             {
                 return NotFound();
             }
 
-            var combo = await _context.Combo.FindAsync(id);
+            var combo = await _context.Combos.Include(c => c.SushiAssignments).ThenInclude(c => c.Sushi).AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
             if (combo == null)
             {
                 return NotFound();
             }
+            PopulateAssignedSushiData(combo);
             return View(combo);
         }
 
@@ -120,45 +135,95 @@ namespace UserManagementMVCExample.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Count,Price")] Combo combo)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Count,Price")] Combo combo, string[] selectedSushis)
         {
             if (id != combo.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var comboToUpdate = await _context.Combos.Include(c => c.SushiAssignments).ThenInclude(c => c.Sushi).FirstOrDefaultAsync(m => m.Id == id);
+
+            if (await TryUpdateModelAsync<Combo>(
+                comboToUpdate,
+                "",
+                c => c.Name, c => c.Price))
             {
+                UpdateComboSushis(selectedSushis, comboToUpdate);
                 try
                 {
-                    _context.Update(combo);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateException /* ex */)
                 {
-                    if (!ComboExists(combo.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists, " +
+                        "see your system administrator.");
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(combo);
+            UpdateComboSushis(selectedSushis, comboToUpdate);
+            PopulateAssignedSushiData(comboToUpdate);
+            return View(comboToUpdate);
+        }
+        private void PopulateAssignedSushiData(Combo combo)
+        {
+            var allSushis = _context.Sushis;
+            var comboSushis = new HashSet<int>(combo.SushiAssignments.Select(s => s.SushiID));
+            var viewModel = new List<AssignedSushiDataViewModel>();
+            foreach (var sushi in allSushis)
+            {
+                viewModel.Add(new AssignedSushiDataViewModel
+                {
+                    SushiID = sushi.Id,
+                    Name = sushi.Name,
+                    Assigned = comboSushis.Contains(sushi.Id)
+                });
+            }
+            ViewData["Sushis"] = viewModel;
+        }
+        private void UpdateComboSushis(string[] selectedSushis, Combo comboToUpdate)
+        {
+            if (selectedSushis == null)
+            {
+                comboToUpdate.SushiAssignments = new List<SushiAssignmentViewModel>();
+                return;
+            }
+
+            var selectedSushisHS = new HashSet<string>(selectedSushis);
+            var comboSushis = new HashSet<int>
+                (comboToUpdate.SushiAssignments.Select(s => s.Sushi.Id));
+            foreach (var sushi in _context.Sushis)
+            {
+                if (selectedSushisHS.Contains(sushi.Id.ToString()))
+                {
+                    if (!comboSushis.Contains(sushi.Id))
+                    {
+                        comboToUpdate.SushiAssignments.Add(new SushiAssignmentViewModel { ComboID = comboToUpdate.Id, SushiID = sushi.Id });
+                    }
+                }
+                else
+                {
+
+                    if (comboSushis.Contains(sushi.Id))
+                    {
+                        SushiAssignmentViewModel sushiToRemove = comboToUpdate.SushiAssignments.FirstOrDefault(c => c.SushiID == sushi.Id);
+                        _context.Remove(sushiToRemove);
+                    }
+                }
+            }
         }
 
         // GET: Combos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Combo == null)
+            if (id == null || _context.Combos == null)
             {
                 return NotFound();
             }
 
-            var combo = await _context.Combo
+            var combo = await _context.Combos
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (combo == null)
             {
@@ -173,14 +238,14 @@ namespace UserManagementMVCExample.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Combo == null)
+            if (_context.Combos == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Combo'  is null.");
             }
-            var combo = await _context.Combo.FindAsync(id);
+            Combo combo = await _context.Combos.Include(c => c.SushiAssignments).SingleAsync(c => c.Id == id);
             if (combo != null)
             {
-                _context.Combo.Remove(combo);
+                _context.Combos.Remove(combo);
             }
             
             await _context.SaveChangesAsync();
@@ -189,7 +254,7 @@ namespace UserManagementMVCExample.Controllers
 
         private bool ComboExists(int id)
         {
-          return _context.Combo.Any(e => e.Id == id);
+          return _context.Combos.Any(e => e.Id == id);
         }
     }
 }

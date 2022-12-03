@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +24,12 @@ namespace UserManagementMVCExample.Controllers
         {
             _context = context;
         }
+        /*[BindProperty]
+        public Sushi Sushi { get; set; }
+
+        [BindProperty]
+        public string OriginalImage { set; get; }
+        OriginalImage = PhotoURL*/
 
         // GET: Sushis
         public async Task<IActionResult> Index()
@@ -88,17 +97,34 @@ namespace UserManagementMVCExample.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Count,Type,Price")] Sushi sushi) //Edit POST
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Count,Type,Price,ImageURL")] Sushi sushi) //Edit POST
         {
             if (id != sushi.Id)
             {
                 return NotFound();
             }
-
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var data = _context.Sushis.AsNoTracking().Where(x => x.Id == sushi.Id).FirstOrDefault();
+
+                    byte[] ImagePath = data.ImageURL;
+
+                    data = null;
+                    if (Request.Form.Files.Count > 0)
+                    {
+                        IFormFile file = Request.Form.Files.FirstOrDefault();
+                        using (var dataStream = new MemoryStream())
+                        {
+                            await file.CopyToAsync(dataStream);
+                            sushi.ImageURL = dataStream.ToArray();
+                        }
+                    }
+                    else
+                    {
+                        sushi.ImageURL = ImagePath;
+                    }
                     _context.Update(sushi);
                     await _context.SaveChangesAsync();
                 }

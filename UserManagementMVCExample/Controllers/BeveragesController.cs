@@ -25,18 +25,18 @@ namespace UserManagementMVCExample.Controllers
         // GET: Beverages
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Beverage.ToListAsync());
+              return View(await _context.Beverages.ToListAsync());
         }
 
         // GET: Beverages/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Beverage == null)
+            if (id == null || _context.Beverages == null)
             {
                 return NotFound();
             }
 
-            var beverage = await _context.Beverage
+            var beverage = await _context.Beverages
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (beverage == null)
             {
@@ -71,12 +71,12 @@ namespace UserManagementMVCExample.Controllers
         // GET: Beverages/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Beverage == null)
+            if (id == null || _context.Beverages == null)
             {
                 return NotFound();
             }
 
-            var beverage = await _context.Beverage.FindAsync(id);
+            var beverage = await _context.Beverages.FindAsync(id);
             if (beverage == null)
             {
                 return NotFound();
@@ -122,12 +122,12 @@ namespace UserManagementMVCExample.Controllers
         // GET: Beverages/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Beverage == null)
+            if (id == null || _context.Beverages == null)
             {
                 return NotFound();
             }
 
-            var beverage = await _context.Beverage
+            var beverage = await _context.Beverages
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (beverage == null)
             {
@@ -142,14 +142,14 @@ namespace UserManagementMVCExample.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Beverage == null)
+            if (_context.Beverages == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Beverage'  is null.");
             }
-            var beverage = await _context.Beverage.FindAsync(id);
+            var beverage = await _context.Beverages.FindAsync(id);
             if (beverage != null)
             {
-                _context.Beverage.Remove(beverage);
+                _context.Beverages.Remove(beverage);
             }
             
             await _context.SaveChangesAsync();
@@ -158,7 +158,7 @@ namespace UserManagementMVCExample.Controllers
 
         private bool BeverageExists(int id)
         {
-          return _context.Beverage.Any(e => e.Id == id);
+          return _context.Beverages.Any(e => e.Id == id);
         }
     }
 }
