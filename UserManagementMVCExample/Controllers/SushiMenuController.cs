@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UserManagementMVCExample.Data;
 using UserManagementMVCExample.Models;
+using UserManagementMVCExample.Models.ViewModels;
 
 namespace UserManagementMVCExample.Controllers
 {

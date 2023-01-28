@@ -1,4 +1,6 @@
-﻿namespace UserManagementMVCExample.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace UserManagementMVCExample.Models.ViewModels
 {
     public class SushiAssignmentViewModel
     {

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Reflection.Emit;
 using System.Text;
 using UserManagementMVCExample.Models;
+using UserManagementMVCExample.Models.ViewModels;
 
 namespace UserManagementMVCExample.Data
 {
@@ -49,9 +50,13 @@ namespace UserManagementMVCExample.Data
             });
             builder.Entity<SushiAssignmentViewModel>()
                 .HasKey(s => new { s.SushiID, s.ComboID });
+
+            builder.Entity<SushiAssignmentViewModel>()
+                            .HasOne(s => s.Sushi)
+                            .WithMany(c => c.SushiAssignments)
+                            .HasForeignKey(c => c.SushiID)
+                            .OnDelete(DeleteBehavior.NoAction);
         }
-        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        public DbSet<Cart> Carts { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Sushi> Sushis { get; set; }
@@ -59,5 +64,6 @@ namespace UserManagementMVCExample.Data
         public DbSet<Dessert> Desserts { get; set; }
         public DbSet<Combo> Combos { get; set; }
         public DbSet<SushiAssignmentViewModel> SushiAssignments { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
     }
 }

@@ -13,6 +13,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using UserManagementMVCExample.Data;
 using UserManagementMVCExample.Models;
+using Microsoft.AspNetCore.Http;
+using UserManagementMVCExample.Services;
 
 namespace UserManagementMVCExample
 {
@@ -35,6 +37,10 @@ namespace UserManagementMVCExample
                     .AddDefaultTokenProviders();
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddHttpContextAccessor();
+            services.AddDistributedMemoryCache();
+            services.AddSession();
+            services.AddScoped<CartService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +64,8 @@ namespace UserManagementMVCExample
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

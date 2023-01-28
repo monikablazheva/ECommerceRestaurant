@@ -9,6 +9,7 @@ namespace UserManagementMVCExample.Models
     {
         [Key]
         public int Id { get; set; }
+        public string CartId { get; set; }
         public int SushiProductsCount { get; set; }
 
         [Range(0, 1000000, ErrorMessage = "Price must be between 0 and 1000000.")]
@@ -26,8 +27,7 @@ namespace UserManagementMVCExample.Models
         public ApplicationUser Customer { get; set; }
 
         public Order Order { get; set; }
-
-        public ICollection<Sushi> Sushis { get; set; }
+        public Sushi Sushi { get; set; }
         public ICollection<Beverage> Beverages { get; set; }
         public ICollection<Dessert> Desserts { get; set; }
     }

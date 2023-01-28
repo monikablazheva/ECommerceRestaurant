@@ -1,4 +1,4 @@
-﻿namespace UserManagementMVCExample.Models
+﻿namespace UserManagementMVCExample.Models.ViewModels
 {
     public class AssignedSushiDataViewModel
     {

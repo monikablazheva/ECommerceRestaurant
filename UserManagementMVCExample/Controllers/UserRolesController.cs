@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UserManagementMVCExample.Enums;
 using UserManagementMVCExample.Models;
+using UserManagementMVCExample.Models.ViewModels;
 
 namespace UserManagementMVCExample.Controllers
 {

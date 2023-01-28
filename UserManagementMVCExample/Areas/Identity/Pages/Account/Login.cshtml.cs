@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using UserManagementMVCExample.Models;
 using System.Net.Mail;
+using Microsoft.VisualBasic;
+using UserManagementMVCExample.Services;
 
 namespace UserManagementMVCExample.Areas.Identity.Pages.Account
 {
@@ -22,14 +24,14 @@ namespace UserManagementMVCExample.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly CartService _cartService;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, 
-            ILogger<LoginModel> logger,
-            UserManager<ApplicationUser> userManager)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager, CartService cartService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _cartService = cartService;
         }
 
         [BindProperty]
@@ -94,9 +96,9 @@ namespace UserManagementMVCExample.Areas.Identity.Pages.Account
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var userName = Input.Email;
+                var user = await _userManager.FindByEmailAsync(Input.Email);
                 if (IsValidEmail(Input.Email))
                 {
-                    var user = await _userManager.FindByEmailAsync(Input.Email);
                     if (user != null)
                     {
                         userName = user.UserName;
@@ -106,6 +108,7 @@ namespace UserManagementMVCExample.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                    //await TransferBasketToUserAsync(user.Id); //Input?.Email
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

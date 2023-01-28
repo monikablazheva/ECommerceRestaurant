@@ -5,32 +5,24 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace UserManagementMVCExample.Migrations
 {
-    public partial class ComboImageURLEdit : Migration
+    public partial class ComboNewImageURL : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
+            migrationBuilder.DropColumn(
                 name: "ImageURL",
                 schema: "Identity",
-                table: "Combos",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(byte[]),
-                oldType: "varbinary(max)",
-                oldNullable: true);
+                table: "Combos");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<byte[]>(
+            migrationBuilder.AddColumn<byte[]>(
                 name: "ImageURL",
                 schema: "Identity",
                 table: "Combos",
                 type: "varbinary(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
+                nullable: true);
         }
     }
 }

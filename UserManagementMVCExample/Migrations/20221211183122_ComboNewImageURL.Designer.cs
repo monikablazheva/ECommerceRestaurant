@@ -12,8 +12,8 @@ using UserManagementMVCExample.Data;
 namespace UserManagementMVCExample.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221027054607_BytesArrayImageURL")]
-    partial class BytesArrayImageURL
+    [Migration("20221211183122_ComboNewImageURL")]
+    partial class ComboNewImageURL
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -371,11 +371,11 @@ namespace UserManagementMVCExample.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<byte[]>("ComboImageURL")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<int>("Count")
                         .HasColumnType("int");
-
-                    b.Property<byte[]>("ImageURL")
-                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()

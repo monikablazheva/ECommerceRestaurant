@@ -12,8 +12,8 @@ using UserManagementMVCExample.Data;
 namespace UserManagementMVCExample.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221128075637_ComboImageURLEdit")]
-    partial class ComboImageURLEdit
+    [Migration("20221219133603_AddStringCartID")]
+    partial class AddStringCartID
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -349,6 +349,9 @@ namespace UserManagementMVCExample.Migrations
                     b.Property<int>("ApplicationUserID")
                         .HasColumnType("int");
 
+                    b.Property<string>("CartId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -371,11 +374,11 @@ namespace UserManagementMVCExample.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<byte[]>("ComboImageURL")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<int>("Count")
                         .HasColumnType("int");
-
-                    b.Property<string>("ImageURL")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()

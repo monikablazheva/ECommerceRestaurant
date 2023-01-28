@@ -2,28 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using UserManagementMVCExample.Models.ViewModels;
 
 namespace UserManagementMVCExample.Models
 {
-    public class Combo
+    public class Combo : Product
     {
-        [Key]
-        public int Id { get; set; }
-
-        [Required]
-        public string Name { get; set; }
-
-        [Range(0, 1000, ErrorMessage = "Price must be between 0 and 1000.")]
+        [Range(0, 1000, ErrorMessage = "Count must be between 0 and 1000.")]
         public int Count { get; set; }
-
-        [Range(0, 1000, ErrorMessage = "Price must be between 0 and 1000.")]
-        [DataType(DataType.Currency)]
-        [Column(TypeName = "decimal(18, 2)")]
-        public decimal Price { get; set; }
-
-        public string ImageURL { get; set; }
-        public ICollection<Sushi> Sushis { get; set; }
         public ICollection<SushiAssignmentViewModel> SushiAssignments { get; set; }
-
     }
 }

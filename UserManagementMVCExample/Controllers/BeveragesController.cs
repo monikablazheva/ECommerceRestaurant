@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -89,7 +91,7 @@ namespace UserManagementMVCExample.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Milliliters,Type,Price")] Beverage beverage)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Milliliters,Type,Price,ImageURL")] Beverage beverage)
         {
             if (id != beverage.Id)
             {
@@ -100,6 +102,23 @@ namespace UserManagementMVCExample.Controllers
             {
                 try
                 {
+                    var data = _context.Beverages.AsNoTracking().Where(x => x.Id == beverage.Id).FirstOrDefault();
+                    byte[] ImagePath = data.ImageURL;
+                    data = null;
+
+                    if (Request.Form.Files.Count > 0)
+                    {
+                        IFormFile file = Request.Form.Files.FirstOrDefault();
+                        using (var dataStream = new MemoryStream())
+                        {
+                            await file.CopyToAsync(dataStream);
+                            beverage.ImageURL = dataStream.ToArray();
+                        }
+                    }
+                    else
+                    {
+                        beverage.ImageURL = ImagePath;
+                    }
                     _context.Update(beverage);
                     await _context.SaveChangesAsync();
                 }

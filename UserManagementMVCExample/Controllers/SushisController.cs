@@ -24,12 +24,6 @@ namespace UserManagementMVCExample.Controllers
         {
             _context = context;
         }
-        /*[BindProperty]
-        public Sushi Sushi { get; set; }
-
-        [BindProperty]
-        public string OriginalImage { set; get; }
-        OriginalImage = PhotoURL*/
 
         // GET: Sushis
         public async Task<IActionResult> Index()
@@ -108,10 +102,9 @@ namespace UserManagementMVCExample.Controllers
                 try
                 {
                     var data = _context.Sushis.AsNoTracking().Where(x => x.Id == sushi.Id).FirstOrDefault();
-
                     byte[] ImagePath = data.ImageURL;
-
                     data = null;
+
                     if (Request.Form.Files.Count > 0)
                     {
                         IFormFile file = Request.Form.Files.FirstOrDefault();
@@ -125,6 +118,7 @@ namespace UserManagementMVCExample.Controllers
                     {
                         sushi.ImageURL = ImagePath;
                     }
+
                     _context.Update(sushi);
                     await _context.SaveChangesAsync();
                 }
