@@ -20,18 +20,7 @@ namespace UserManagementMVCExample.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var sushis = await _context.Sushis.ToListAsync();
-            var sushiMenuViewModel = new List<SushiMenuViewModel>();
-            foreach (Sushi sushi in sushis)
-            {
-                var thisViewModel = new SushiMenuViewModel();
-                thisViewModel.SushiID = sushi.Id;
-                thisViewModel.Name = sushi.Name;
-                thisViewModel.Price = sushi.Price;
-                //thisViewModel.Roles = await GetUserRoles(user);
-                //userRolesViewModel.Add(thisViewModel);
-            }
-            return View(sushiMenuViewModel);
+            return View(await _context.Sushis.ToListAsync());
         }
     }
 }

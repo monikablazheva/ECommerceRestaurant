@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UserManagementMVCExample.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace UserManagementMVCExample.Services
 {
@@ -62,19 +63,21 @@ namespace UserManagementMVCExample.Services
 
         public void AddToCart(Product product)
         {
-            var cartItem = _context.CartItems.SingleOrDefault(c => c.CartId == ShoppingCartId && c.ProductId == product.Id);
+            var cartItem = _context.CartItems.Include(c =>c.Product).SingleOrDefault(c => c.CartId == ShoppingCartId && c.ProductId == product.Id);
 
             if (cartItem == null)
             {
                 // Create a new cart item if no cart item exists
                 cartItem = new CartItem
                 {
+                    Product = product,
                     ProductId = product.Id,
                     CartId = ShoppingCartId,
                     Count = 1,
                     DateCreated = DateTime.Now
                 };
                 _context.CartItems.Add(cartItem);
+                _context.SaveChanges();
             }
             else
             {
@@ -86,7 +89,7 @@ namespace UserManagementMVCExample.Services
         public int RemoveFromCart(int id)
         {
             // Get the cart
-            var cartItem = _context.CartItems.Single(
+            var cartItem = _context.CartItems.Include(c=>c.Product).Single(
                 c => c.CartId == ShoppingCartId
                 && c.Id == id);
 
@@ -110,7 +113,7 @@ namespace UserManagementMVCExample.Services
         }
         public void EmptyCart()
         {
-            var cartItems = _context.CartItems.Where(
+            var cartItems = _context.CartItems.Include(c => c.Product).Where(
                 c => c.CartId == ShoppingCartId);
 
             foreach (var cartItem in cartItems)
@@ -122,11 +125,11 @@ namespace UserManagementMVCExample.Services
         }
         public List<CartItem> GetCartItems()
         {
-            return _context.CartItems.Where(c => c.CartId == ShoppingCartId).ToList();
+            return _context.CartItems.Include(c => c.Product).Where(c => c.CartId == ShoppingCartId).ToList();
         }
         public int GetCount()
         {
-            var cartItems = _context.CartItems.Where(c => c.CartId == ShoppingCartId);
+            var cartItems = _context.CartItems.Include(c => c.Product).Where(c => c.CartId == ShoppingCartId);
             int? count = 0;
             foreach (var cartItem in cartItems)
             {
@@ -137,11 +140,11 @@ namespace UserManagementMVCExample.Services
         }
         public decimal GetTotal()
         {
-            var cartItems = _context.CartItems.Where(c => c.CartId == ShoppingCartId);
+            var cartItems = _context.CartItems.Include(c => c.Product).Where(c => c.CartId == ShoppingCartId);
             decimal? total = 0;
             foreach(var cartItem in cartItems)
             {
-                total += cartItem.SubTotal;
+                total += cartItem.SubTotal();
             }
 
             return total ?? decimal.Zero;

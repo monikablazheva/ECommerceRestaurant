@@ -15,6 +15,7 @@ using UserManagementMVCExample.Models;
 using System.Net.Mail;
 using Microsoft.VisualBasic;
 using UserManagementMVCExample.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace UserManagementMVCExample.Areas.Identity.Pages.Account
 {
@@ -24,14 +25,16 @@ namespace UserManagementMVCExample.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
-        private readonly CartService _cartService;
+        private readonly CartService _shoppingCart;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager, CartService cartService)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager, CartService shoppingCart, IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
-            _cartService = cartService;
+            _shoppingCart = shoppingCart;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         [BindProperty]
@@ -68,6 +71,14 @@ namespace UserManagementMVCExample.Areas.Identity.Pages.Account
             {
                 return false;
             }
+        }
+        private void MigrateShoppingCart(string UserName)
+        {
+            // Associate shopping cart items with logged-in user
+            var cart = _shoppingCart;
+
+            cart.MigrateCart(UserName);
+            _httpContextAccessor.HttpContext.Session.SetString(CartService.CartSessionKey, UserName);
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -108,7 +119,7 @@ namespace UserManagementMVCExample.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    //await TransferBasketToUserAsync(user.Id); //Input?.Email
+                    MigrateShoppingCart(userName);
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

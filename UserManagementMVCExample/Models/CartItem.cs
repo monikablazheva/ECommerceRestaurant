@@ -8,21 +8,25 @@ namespace UserManagementMVCExample.Models
     {
         [Key]
         public int Id { get; set; }
+
+        [Required]
         public string CartId { get; set; }
+
+        [Required]
+        [ForeignKey("Product")]
         public int ProductId { get; set; }
+
+        [Required]
         public int Count { get; set; }
+
+        [Required]
         public System.DateTime DateCreated { get; set; }
-        public virtual Product Product { get; set; }
 
-        private decimal _SubTotal;
-
-        [Range(0, 1000000, ErrorMessage = "Price must be between 0 and 1000000.")]
-        [DataType(DataType.Currency)]
-        [Column(TypeName = "decimal(18, 2)")]
-        public decimal SubTotal
+        [Required]
+        public Product Product { get; set; }
+        public decimal SubTotal()
         {
-            get { return _SubTotal; }
-            set { _SubTotal = Product.Price * Count; }
+            return Product.Price * Count;
         }
     }
 }

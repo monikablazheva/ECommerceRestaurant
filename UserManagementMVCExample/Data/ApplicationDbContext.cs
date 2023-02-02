@@ -65,5 +65,6 @@ namespace UserManagementMVCExample.Data
         public DbSet<Combo> Combos { get; set; }
         public DbSet<SushiAssignmentViewModel> SushiAssignments { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<Product> Products { get; set; }
     }
 }
