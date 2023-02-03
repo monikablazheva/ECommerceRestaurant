@@ -28,7 +28,11 @@ namespace UserManagementMVCExample.Areas.Identity.Pages.Account
         private readonly CartService _shoppingCart;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, UserManager<ApplicationUser> userManager, CartService shoppingCart, IHttpContextAccessor httpContextAccessor)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, 
+            ILogger<LoginModel> logger, 
+            UserManager<ApplicationUser> userManager, 
+            CartService shoppingCart, 
+            IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
             _signInManager = signInManager;

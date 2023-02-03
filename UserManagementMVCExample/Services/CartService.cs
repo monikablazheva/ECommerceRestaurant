@@ -7,6 +7,7 @@ using System.Linq;
 using UserManagementMVCExample.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace UserManagementMVCExample.Services
 {
@@ -14,20 +15,23 @@ namespace UserManagementMVCExample.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IHttpContextAccessor httpContextAccessor;
-
-        public CartService(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
+        //private readonly UserManager<ApplicationUser> _userManager;
+        string ShoppingCartId { get; set; }
+        public const string CartSessionKey = "CartID";
+        public CartService(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor/*, UserManager<ApplicationUser> userManager*/)
         {
             this._context = context;
             this.httpContextAccessor = httpContextAccessor;
+            //this._userManager = userManager;
+
 
             this.ShoppingCartId = this.GetCartId();
         }
         
-        string ShoppingCartId { get; set; }
-        public const string CartSessionKey = "CartID";
         public string GetCartId()
         {
             HttpContext context = this.httpContextAccessor.HttpContext;
+
 
             if (context.Session.GetString(CartSessionKey) == null)
             {
@@ -51,6 +55,9 @@ namespace UserManagementMVCExample.Services
         // When a user has logged in, transfer their shopping cart to be associated with their username
         public void MigrateCart(string userName)
         {
+            /*HttpContext context = this.httpContextAccessor.HttpContext;
+            context.Session.SetString(CartSessionKey, userName);*/
+            this.ShoppingCartId = userName;
             var cartItems = _context.CartItems.Where(
                 c => c.CartId == ShoppingCartId);
 

@@ -1,33 +1,46 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using UserManagementMVCExample.Data;
+using UserManagementMVCExample.Enums;
 using UserManagementMVCExample.Models;
 using UserManagementMVCExample.Models.ViewModels;
 using UserManagementMVCExample.Services;
 
 namespace UserManagementMVCExample.Controllers
 {
+
     public class ShoppingCartController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly CartService shoppingCart;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ShoppingCartController(ApplicationDbContext context, CartService shoppingCart)
+        public ShoppingCartController(ApplicationDbContext context, CartService shoppingCart, UserManager<ApplicationUser> userManager)
         {
             this._context = context;
             this.shoppingCart = shoppingCart;
+            this._userManager = userManager;
         }
-        public ActionResult Index()
+        [Authorize(Roles = "SuperAdmin, Admin, Basic, Moderator")]
+        public async Task<ActionResult> Index()
         {
+            ClaimsPrincipal currentUser = this.User;
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var user = await _userManager.FindByIdAsync(currentUserId);
+            
             var cart = shoppingCart;
 
             ShoppingCartViewModel viewModel = new ShoppingCartViewModel
             {
                 CartItems = cart.GetCartItems(),
-                CartTotal = cart.GetTotal()
+                CartTotal = cart.GetTotal(),
+                User = user
             };
             return View(viewModel);
         }
