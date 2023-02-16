@@ -1,0 +1,109 @@
+﻿@model UserManagementMVCExample.Models.ViewModels.ProductsMenuViewModel
+@{
+    ViewData["Title"] = "Products menu";
+}
+<h1>Menu</h1>
+<h4>Sushis</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach(var sushi in Model.Sushis) 
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => sushi.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => sushi.Price)
+                    </td>
+                    <td>
+                        <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@sushi.Id">Add to Bag</a>
+                    </td>
+                </tr>
+            }
+    </tbody>
+</table>
+<h4>Combos</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach (var combo in Model.Combos)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => combo.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => combo.Price)
+                    </td>
+                    <td>
+                        <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@combo.Id">Add to Bag</a>
+                    </td>
+                </tr>
+            }
+    </tbody>
+</table>
+<h4>Desserts</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach (var dessert in Model.Desserts)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => dessert.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => dessert.Price)
+                    </td>
+                    <td>
+                        <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@dessert.Id">Add to Bag</a>
+                    </td>
+                </tr>
+            }
+    </tbody>
+</table>
+<h4>Beverages</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var beverages in Model.Beverages)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => beverages.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => beverages.Price)
+                    </td>
+                    <td>
+                        <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@beverages.Id">Add to Bag</a>
+                    </td>
+                </tr>
+            }
+    </tbody>
+</table>

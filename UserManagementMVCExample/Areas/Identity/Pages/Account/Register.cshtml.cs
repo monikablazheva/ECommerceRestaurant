@@ -27,22 +27,17 @@ namespace UserManagementMVCExample.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-        private readonly CartService _shoppingCart;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender, CartService shoppingCart, 
-            IHttpContextAccessor httpContextAccessor)
+            IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
-            _shoppingCart = shoppingCart;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         [BindProperty]
@@ -78,14 +73,6 @@ namespace UserManagementMVCExample.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
         }
-        private void MigrateShoppingCart(string UserName)
-        {
-            // Associate shopping cart items with logged-in user
-            var cart = _shoppingCart;
-
-            cart.MigrateCart(UserName);
-            _httpContextAccessor.HttpContext.Session.SetString(CartService.CartSessionKey, UserName);
-        }
 
         public async Task OnGetAsync(string returnUrl = null)
         {
@@ -113,7 +100,6 @@ namespace UserManagementMVCExample.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
                     await _userManager.AddToRoleAsync(user, Enums.Roles.Basic.ToString()); //Adding basic role to the new user
-                    MigrateShoppingCart(userName);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(

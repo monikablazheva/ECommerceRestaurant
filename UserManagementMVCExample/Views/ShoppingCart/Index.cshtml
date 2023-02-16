@@ -12,15 +12,15 @@
                 var recordToDelete = $(this).attr("data-id");
                 if (recordToDelete != '') {
                     // Perform the ajax post
-                    $.post("@Url.Action("RemoveFromCart","ShoppingCart")", { "id": recordToDelete },
+                    console.log(JSON.parse(JSON.stringify(recordToDelete)))
+                    $.post("@Url.Action("RemoveFromCart","ShoppingCart")", { "cartItemId": recordToDelete },
                         function (data) {
                             // Successful requests get here
                             // Update the page elements
-                            if (data.ItemCount == 0) {
-                                $('#row-' + data.DeleteId).fadeOut('slow');
-                            } else {
+                            $('#row-' + data.DeleteId).fadeOut('slow');
+                            /*} else {
                                 $('#item-count-' + data.DeleteId).text(data.ItemCount);
-                            }
+                            }*/
                             $('#cart-total').text(data.CartTotal);
                             $('#update-message').text(data.Message);
                             $('#cart-status').text('Cart (' + data.CartCount + ')');
@@ -34,24 +34,74 @@
             var json = context.get_data();
             var data = Sys.Serialization.JavaScriptSerializer.deserialize(json);
             // Update the page elements
-            if (data.ItemCount == 0) {
                 $('#row-' + data.DeleteId).fadeOut('slow');
-            } else {
                 $('#item-count-' + data.DeleteId).text(data.ItemCount);
-            }
             $('#cart-total').text(data.CartTotal);
             $('#update-message').text(data.Message);
             $('#cart-status').text('Cart (' + data.CartCount + ')');
         }
+
+        $(document).ready(function () {
+
+            $(".plus").each(function (index) {
+                let id = $(this).attr("data-id");
+                $('#span-plus-'+ id).on("click", function (){
+                //console.log(id);
+                    if (id != '') {
+                    // Perform the ajax post
+                    $.post("@Url.Action("IncreaseCartItemCount","ShoppingCart")", { "cartItemId": id },
+                        function (data) {
+                            // Successful requests get here
+                            // Update the page elements
+                                $('#count-' + id).val(data.ItemCount);
+                            $('#cart-total').text(data.CartTotal);
+                            $('#cart-status').text('Cart (' + data.CartCount + ')');
+                            
+                        }
+                    );
+                }
+                });
+            });
+        
+
+            $(".minus").each(function (index) {
+                let id = $(this).attr("data-id");
+                $('#span-minus-' + id).on("click", function () {
+                    //console.log(id);
+                if (id != '') {
+                    if ($('#count-' + id).val() <= 1) {
+                            $('#count-' + id).val(1);
+                    }
+                    else{
+                    $.post("@Url.Action("DecreaseCartItemCount","ShoppingCart")", { "cartItemId": id },
+                    /*$('.count').val(parseInt($('.count').val()) - 1);
+                    if ($('.count').val() == 0) {
+                        $('.count').val(1);
+                    }*/
+                        function (data) {
+                            // Successful requests get here
+                            // Update the page elements
+                            $('#count-' + id).val(data.ItemCount);
+                            $('#cart-total').text(data.CartTotal);
+                            $('#cart-status').text('Cart (' + data.CartCount + ')');
+
+                        }
+                        
+                    );
+                    }
+                }
+                });
+            });
+        });
     </script>
 }
 
 <h3>
     <em>Review</em> your cart:
  </h3>
-<p class="button">
-    @Html.ActionLink("Checkout>>", "AddressAndPayment", "Checkout")
-</p>
+    <div>
+        <a asp-controller="ProductsMenu" asp-action="Index">Back to Menu</a>
+    </div>
 <div id="update-message">
 </div>
 <table>
@@ -77,7 +127,11 @@
                 @item.Product.Price
             </td>
             <td id="item-count-@item.Id">
-                @item.Count
+                <div class="qty mt-2">
+                    <span class="minus bg-dark" id="span-minus-@item.Id" data-id="@item.Id">-</span>
+                    <input type="number" class="count" id="count-@item.Id" data-id="@item.Id" name="qty" value="@item.Count">
+                    <span class="plus bg-dark" id="span-plus-@item.Id" data-id="@item.Id">+</span>
+                </div>
             </td>
             <td>
                 <a href="#" class="RemoveLink" data-id="@item.Id">Remove from cart</a>

@@ -6,6 +6,5 @@ namespace UserManagementMVCExample.Models.ViewModels
     {
         public List<CartItem> CartItems { get; set; }
         public decimal CartTotal { get; set; }
-        public ApplicationUser User { get; set; }
     }
 }

@@ -19,28 +19,21 @@ namespace UserManagementMVCExample.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly CartService shoppingCart;
-        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ShoppingCartController(ApplicationDbContext context, CartService shoppingCart, UserManager<ApplicationUser> userManager)
+        public ShoppingCartController(ApplicationDbContext context, CartService shoppingCart)
         {
             this._context = context;
             this.shoppingCart = shoppingCart;
-            this._userManager = userManager;
         }
         [Authorize(Roles = "SuperAdmin, Admin, Basic, Moderator")]
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
-            ClaimsPrincipal currentUser = this.User;
-            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var user = await _userManager.FindByIdAsync(currentUserId);
-            
             var cart = shoppingCart;
 
             ShoppingCartViewModel viewModel = new ShoppingCartViewModel
             {
                 CartItems = cart.GetCartItems(),
-                CartTotal = cart.GetTotal(),
-                User = user
+                CartTotal = cart.GetTotal()
             };
             return View(viewModel);
         }
@@ -64,16 +57,16 @@ namespace UserManagementMVCExample.Controllers
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
-        public ActionResult RemoveFromCart(int id)
+        public ActionResult RemoveFromCart(int cartItemId)
         {
             var cart = shoppingCart;
 
             // Get the name of the product to display confirmation
             var productName = _context.CartItems.Include(p => p.Product)
-                .FirstOrDefault(p => p.Id == id).Product.Name;
+                .FirstOrDefault(p => p.Id == cartItemId).Product.Name;
 
             // Remove from cart
-            int itemCount = cart.RemoveFromCart(id);
+            cart.RemoveFromCart(cartItemId);
 
             // Display the confirmation message
             var results = new ShoppingCartRemoveViewModel
@@ -82,10 +75,38 @@ namespace UserManagementMVCExample.Controllers
                     " has been removed from your shopping cart.",
                 CartTotal = cart.GetTotal(),
                 CartCount = cart.GetCount(),
+                DeleteId = cartItemId
+            };
+            return Json(results);
+        }
+
+        //[HttpPost]
+        public ActionResult IncreaseCartItemCount(int cartItemId)
+        {
+            var cart = shoppingCart;
+            int itemCount = cart.IncreaseByOneCartItemCount(cartItemId);
+            var results = new ShoppingCartUpdateItemCountViewModel
+            {
                 ItemCount = itemCount,
-                DeleteId = id
+                CartTotal = cart.GetTotal(),
+                CartCount = cart.GetCount()
+            };
+            return Json(results);
+        }
+
+        //[HttpPost]
+        public ActionResult DecreaseCartItemCount(int cartItemId)
+        {
+            var cart = shoppingCart;
+            int itemCount = cart.DecreaseByOneCartItemCount(cartItemId);
+            var results = new ShoppingCartUpdateItemCountViewModel
+            {
+                ItemCount = itemCount,
+                CartTotal = cart.GetTotal(),
+                CartCount = cart.GetCount()
             };
             return Json(results);
         }
     }
 }
+

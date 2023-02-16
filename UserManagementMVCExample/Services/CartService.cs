@@ -15,14 +15,12 @@ namespace UserManagementMVCExample.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IHttpContextAccessor httpContextAccessor;
-        //private readonly UserManager<ApplicationUser> _userManager;
         string ShoppingCartId { get; set; }
         public const string CartSessionKey = "CartID";
-        public CartService(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor/*, UserManager<ApplicationUser> userManager*/)
+        public CartService(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             this._context = context;
             this.httpContextAccessor = httpContextAccessor;
-            //this._userManager = userManager;
 
 
             this.ShoppingCartId = this.GetCartId();
@@ -55,8 +53,6 @@ namespace UserManagementMVCExample.Services
         // When a user has logged in, transfer their shopping cart to be associated with their username
         public void MigrateCart(string userName)
         {
-            /*HttpContext context = this.httpContextAccessor.HttpContext;
-            context.Session.SetString(CartSessionKey, userName);*/
             this.ShoppingCartId = userName;
             var cartItems = _context.CartItems.Where(
                 c => c.CartId == ShoppingCartId);
@@ -93,27 +89,49 @@ namespace UserManagementMVCExample.Services
             // Save changes
             _context.SaveChanges();
         }
-        public int RemoveFromCart(int id)
+        public void RemoveFromCart(int id)
         {
             // Get the cart
             var cartItem = _context.CartItems.Include(c=>c.Product).Single(
                 c => c.CartId == ShoppingCartId
                 && c.Id == id);
 
-            int itemCount = 0;
-
             if (cartItem != null)
             {
-                if (cartItem.Count > 1)
-                {
-                    cartItem.Count--;
-                    itemCount = cartItem.Count;
-                }
-                else
-                {
-                    _context.CartItems.Remove(cartItem);
-                }
-                // Save changes
+                _context.CartItems.Remove(cartItem);
+                _context.SaveChanges();
+            }
+        }
+        public int IncreaseByOneCartItemCount(int id)
+        {
+            // Get the cart
+            var cartItem = _context.CartItems.Include(c => c.Product).Single(
+                c => c.CartId == ShoppingCartId
+                && c.Id == id);
+
+            int itemCount = 0;
+            if(cartItem !=null)
+            {
+                cartItem.Count++;
+                itemCount = cartItem.Count;
+                _context.CartItems.Update(cartItem);
+                _context.SaveChanges();
+            }
+            return itemCount;
+        }
+        public int DecreaseByOneCartItemCount(int id)
+        {
+            // Get the cart
+            var cartItem = _context.CartItems.Include(c => c.Product).Single(
+                c => c.CartId == ShoppingCartId
+                && c.Id == id);
+
+            int itemCount = 0;
+            if (cartItem != null)
+            {
+                cartItem.Count--;
+                itemCount = cartItem.Count;
+                _context.CartItems.Update(cartItem);
                 _context.SaveChanges();
             }
             return itemCount;

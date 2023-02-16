@@ -11,8 +11,6 @@ namespace UserManagementMVCExample.Models
         public string HomeAdress { get; set; }
         public int UsernameChangeLimit { get; set; } = 10;
         public byte[] ProfilePicture { get; set; }
-        public int? CartID { get; set; }
-        public Cart Cart { get; set; }
         public ICollection<Order> CompletedOrders { get; set; }
 
     }

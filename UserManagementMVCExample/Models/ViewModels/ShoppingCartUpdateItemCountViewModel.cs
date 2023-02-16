@@ -1,10 +1,10 @@
 ﻿namespace UserManagementMVCExample.Models.ViewModels
 {
-    public class ShoppingCartRemoveViewModel
+    public class ShoppingCartUpdateItemCountViewModel
     {
-        public string Message { get; set; }
         public decimal CartTotal { get; set; }
         public int CartCount { get; set; }
-        public int DeleteId { get; set; }
+        public int ItemCount { get; set; }
+        public int UpdatedId { get; set; }
     }
 }
