@@ -15,6 +15,7 @@ using UserManagementMVCExample.Data;
 using UserManagementMVCExample.Models;
 using Microsoft.AspNetCore.Http;
 using UserManagementMVCExample.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace UserManagementMVCExample
 {
@@ -35,14 +36,22 @@ namespace UserManagementMVCExample
                     .AddEntityFrameworkStores<ApplicationDbContext>()
                     .AddDefaultUI()
                     .AddDefaultTokenProviders();
+
+            /*services.Configure<IdentityOptions>(opts =>
+            {
+                opts.SignIn.RequireConfirmedEmail = true;
+            });*/
+
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddHttpContextAccessor();
             services.AddDistributedMemoryCache();
             services.AddSession();
             services.AddScoped<CartService>();
+            services.AddScoped<EmailSender>();
             services.AddControllersWithViews()
              .AddJsonOptions(jsonOptions => jsonOptions.JsonSerializerOptions.PropertyNamingPolicy = null);
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
