@@ -16,10 +16,10 @@ namespace UserManagementMVCExample.Services
                 EnableSsl = true,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential("yoan040707@gmail.com", "zryftrdtpzcqmhfr") //rozamvkionjfwewm
+                Credentials = new NetworkCredential("lotusushi.restaurant@gmail.com", "wrzroclnxrmlijco")
             };
 
-            return client.SendMailAsync("monitob875@gmail.com", email, subject, htmlMessage);
+            return client.SendMailAsync("lotusushi.restaurant@gmail.com", email, subject, htmlMessage);
         }
     }
 }
