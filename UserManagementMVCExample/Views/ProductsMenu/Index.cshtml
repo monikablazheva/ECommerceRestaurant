@@ -2,108 +2,114 @@
 @{
     ViewData["Title"] = "Products menu";
 }
-<h1>Menu</h1>
-<h4>Sushis</h4>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-            @foreach(var sushi in Model.Sushis) 
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => sushi.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => sushi.Price)
-                    </td>
-                    <td>
-                        <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@sushi.Id">Add to Bag</a>
-                    </td>
-                </tr>
-            }
-    </tbody>
-</table>
-<h4>Combos</h4>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-            @foreach (var combo in Model.Combos)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => combo.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => combo.Price)
-                    </td>
-                    <td>
-                        <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@combo.Id">Add to Bag</a>
-                    </td>
-                </tr>
-            }
-    </tbody>
-</table>
-<h4>Desserts</h4>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-            @foreach (var dessert in Model.Desserts)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => dessert.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => dessert.Price)
-                    </td>
-                    <td>
-                        <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@dessert.Id">Add to Bag</a>
-                    </td>
-                </tr>
-            }
-    </tbody>
-</table>
-<h4>Beverages</h4>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+<h1 class="text-center">Menu</h1>
+
+<div class="container ">
+    <div class="row">
+        @foreach(var sushi in Model.Sushis) 
+        {
+            <div class="product-card">
+                <div class="product-tumb">
+                    @if (sushi.ImageURL != null)
+                    {
+                        <img src="data:image/*;base64,@(Convert.ToBase64String(sushi.ImageURL))">
+                    }
+                    else
+                    {
+                        <img src="">
+                    }
+                </div>
+                <div class="product-details">
+                    <span class="product-catagory">Sushi</span>
+                    <h4><a href="">@sushi.Name</a></h4>
+                    <div class="product-bottom-details">
+                        <div class="product-price">@sushi.Price лв.</div>
+                        <div class="product-links">
+                            <a href=""><i class="fa fa-heart"></i></a>
+                            <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@sushi.Id"><i class="fa fa-shopping-cart"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        @foreach (var combo in Model.Combos)
+        {
+            <div class="product-card">
+                <div class="product-tumb">
+                    @if (combo.ImageURL != null)
+                    {
+                        <img src="data:image/*;base64,@(Convert.ToBase64String(combo.ImageURL))">
+                    }
+                    else
+                    {
+                        <img src="">
+                    }
+                </div>
+                <div class="product-details">
+                    <span class="product-catagory">Combo</span>
+                    <h4><a href="">@combo.Name</a></h4>
+                    <div class="product-bottom-details">
+                        <div class="product-price">@combo.Price лв.</div>
+                        <div class="product-links">
+                            <a href=""><i class="fa fa-heart"></i></a>
+                            <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@combo.Id"><i class="fa fa-shopping-cart"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        @foreach (var dessert in Model.Desserts)
+        {
+            <div class="product-card">
+                <div class="product-tumb">
+                    @if (dessert.ImageURL != null)
+                    {
+                        <img src="data:image/*;base64,@(Convert.ToBase64String(dessert.ImageURL))">
+                    }
+                    else
+                    {
+                        <img src="">
+                    }
+                </div>
+                <div class="product-details">
+                    <span class="product-catagory">Dessert</span>
+                    <h4><a href="">@dessert.Name</a></h4>
+                    <div class="product-bottom-details">
+                        <div class="product-price">@dessert.Price лв.</div>
+                        <div class="product-links">
+                            <a href=""><i class="fa fa-heart"></i></a>
+                            <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@dessert.Id"><i class="fa fa-shopping-cart"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
         @foreach (var beverages in Model.Beverages)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => beverages.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => beverages.Price)
-                    </td>
-                    <td>
-                        <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@beverages.Id">Add to Bag</a>
-                    </td>
-                </tr>
-            }
-    </tbody>
-</table>
+        {
+            <div class="product-card">
+                <div class="product-tumb">
+                    @if (beverages.ImageURL != null)
+                    {
+                        <img src="data:image/*;base64,@(Convert.ToBase64String(beverages.ImageURL))">
+                    }
+                    else
+                    {
+                        <img src="">
+                    }
+                </div>
+                <div class="product-details">
+                    <span class="product-catagory">Beverage</span>
+                    <h4><a href="">@beverages.Name</a></h4>
+                    <div class="product-bottom-details">
+                        <div class="product-price">@beverages.Price лв.</div>
+                        <div class="product-links">
+                            <a href=""><i class="fa fa-heart"></i></a>
+                            <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@beverages.Id"><i class="fa fa-shopping-cart"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
