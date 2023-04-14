@@ -21,8 +21,8 @@ namespace UserManagementMVCExample.Models
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Price { get; set; }
 
-        public bool IsFavourite { get; set; }
-
         public byte[] ImageURL { get; set; }
+
+        public ICollection<ApplicationUser> UsersFavourite { get; set; }
     }
 }

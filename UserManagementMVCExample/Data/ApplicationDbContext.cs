@@ -58,7 +58,6 @@ namespace UserManagementMVCExample.Data
                             .OnDelete(DeleteBehavior.NoAction);
         }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<Payment> Payments { get; set; }
         public DbSet<Sushi> Sushis { get; set; }
         public DbSet<Beverage> Beverages { get; set; }
         public DbSet<Dessert> Desserts { get; set; }

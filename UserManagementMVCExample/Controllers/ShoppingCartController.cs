@@ -25,6 +25,7 @@ namespace UserManagementMVCExample.Controllers
             this._context = context;
             this.shoppingCart = shoppingCart;
         }
+
         [Authorize(Roles = "SuperAdmin, Admin, Basic, Moderator")]
         public ActionResult Index()
         {
@@ -33,7 +34,7 @@ namespace UserManagementMVCExample.Controllers
             ShoppingCartViewModel viewModel = new ShoppingCartViewModel
             {
                 CartItems = cart.GetCartItems(),
-                CartTotal = cart.GetTotal()
+                CartTotal = cart.GetTotalToString()
             };
             return View(viewModel);
         }
@@ -73,7 +74,7 @@ namespace UserManagementMVCExample.Controllers
             {
                 Message = WebUtility.HtmlEncode(productName) +
                     " has been removed from your shopping cart.",
-                CartTotal = cart.GetTotal(),
+                CartTotal = cart.GetTotalToString(),
                 CartCount = cart.GetCount(),
                 DeleteId = cartItemId
             };
@@ -88,7 +89,7 @@ namespace UserManagementMVCExample.Controllers
             var results = new ShoppingCartUpdateItemCountViewModel
             {
                 ItemCount = itemCount,
-                CartTotal = cart.GetTotal(),
+                CartTotal = cart.GetTotalToString(),
                 CartCount = cart.GetCount()
             };
             return Json(results);
@@ -102,7 +103,7 @@ namespace UserManagementMVCExample.Controllers
             var results = new ShoppingCartUpdateItemCountViewModel
             {
                 ItemCount = itemCount,
-                CartTotal = cart.GetTotal(),
+                CartTotal = cart.GetTotalToString(),
                 CartCount = cart.GetCount()
             };
             return Json(results);

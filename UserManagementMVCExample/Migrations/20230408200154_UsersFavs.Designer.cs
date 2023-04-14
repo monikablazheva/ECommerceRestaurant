@@ -12,8 +12,8 @@ using UserManagementMVCExample.Data;
 namespace UserManagementMVCExample.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230216103412_IsFavouriteProperty")]
-    partial class IsFavouriteProperty
+    [Migration("20230408200154_UsersFavs")]
+    partial class UsersFavs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,6 +24,21 @@ namespace UserManagementMVCExample.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("ApplicationUserProduct", b =>
+                {
+                    b.Property<int>("FavouriteProductsId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UsersFavouriteId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("FavouriteProductsId", "UsersFavouriteId");
+
+                    b.HasIndex("UsersFavouriteId");
+
+                    b.ToTable("ApplicationUserProduct", "Identity");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -347,9 +362,6 @@ namespace UserManagementMVCExample.Migrations
                     b.Property<byte[]>("ImageURL")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<bool>("IsFavourite")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -425,6 +437,21 @@ namespace UserManagementMVCExample.Migrations
                         .HasColumnName("Sushi_Type");
 
                     b.HasDiscriminator().HasValue("Sushi");
+                });
+
+            modelBuilder.Entity("ApplicationUserProduct", b =>
+                {
+                    b.HasOne("UserManagementMVCExample.Models.Product", null)
+                        .WithMany()
+                        .HasForeignKey("FavouriteProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("UserManagementMVCExample.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UsersFavouriteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

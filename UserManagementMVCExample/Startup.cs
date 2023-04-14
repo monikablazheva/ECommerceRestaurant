@@ -16,6 +16,7 @@ using UserManagementMVCExample.Models;
 using Microsoft.AspNetCore.Http;
 using UserManagementMVCExample.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using UserManagementMVCExample.Interfaces;
 
 namespace UserManagementMVCExample
 {
@@ -36,12 +37,6 @@ namespace UserManagementMVCExample
                     .AddEntityFrameworkStores<ApplicationDbContext>()
                     .AddDefaultUI()
                     .AddDefaultTokenProviders();
-
-            /*services.Configure<IdentityOptions>(opts =>
-            {
-                opts.SignIn.RequireConfirmedEmail = true;
-            });*/
-
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddHttpContextAccessor();
@@ -49,6 +44,8 @@ namespace UserManagementMVCExample
             services.AddSession();
             services.AddScoped<CartService>();
             services.AddScoped<EmailSender>();
+            services.Configure<BrainTreeSettings>(Configuration.GetSection("BrainTree"));
+            services.AddSingleton<IBrainTree, BrainTree>();
             services.AddControllersWithViews()
              .AddJsonOptions(jsonOptions => jsonOptions.JsonSerializerOptions.PropertyNamingPolicy = null);
            

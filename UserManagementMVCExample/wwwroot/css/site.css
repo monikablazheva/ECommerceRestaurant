@@ -70,9 +70,6 @@ body {
   line-height: 60px; /* Vertically center the text there */
 }
 
-/*Menu
----------------------------------------------------*/
-
 /*Plus-Minus Button
 ---------------------------------------------------*/
 .qty .count {
@@ -120,28 +117,32 @@ body {
 .plus:hover {
     background-color: #717fe0 !important;
 }
-/*Prevent text selection*/
+
+
+/*Prevent text selection in cart's products' quantity*/
 span {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
 }
 
-input {
+.Input  {
     border: 0;
     width: 2%;
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
+    .Input::-webkit-outer-spin-button,
+    .Input::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
     }
 
-input:disabled {
+    .Input:disabled {
         background-color: white;
     }
 
+/*Menu
+---------------------------------------------------*/
 
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700');
 
@@ -257,3 +258,91 @@ a {
         .product-links a:hover {
             color: #fbb72c;
         }
+
+.selected {
+    color: #fbb72c !important;
+}
+
+.cart-product-tumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+    padding: 0px;
+    background: #fff;
+}
+
+    .cart-product-tumb img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+#snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+}
+
+    #snackbar.show {
+        visibility: visible;
+        -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+
+@-webkit-keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}
+
+@keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}

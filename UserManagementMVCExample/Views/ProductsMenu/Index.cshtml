@@ -2,6 +2,50 @@
 @{
     ViewData["Title"] = "Products menu";
 }
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(".Favourite").each(function (index) {
+
+                let id = $(this).attr("data-id");
+                let icon = $('#icon-' + id);
+
+                //console.log(id);
+                $('#fav-' + id).on("click", function () {
+                    if (id != '') {
+                        
+                        $.post("@Url.Action("AddRemoveFavourite","Favourites")", { "id": id },
+                            function (data) {
+                            if(data.success) {
+                                console.log(id);
+
+                                //localStorage.clear();
+                                $('#icon-' + id).removeClass("product-links").addClass("selected");
+                                localStorage.setItem("selected_icon_" + id, "true");
+                            }
+                            else {
+                                    console.log("remove");
+                                    //localStorage.clear();
+                                    $('#icon-' + id).removeClass('selected').addClass('product-links');
+                                    // Remove the corresponding item from local storage
+                                    localStorage.removeItem('selected_icon_' + id);
+                            }
+                        }
+                        );
+                    }
+                });
+                if (localStorage.getItem("selected_icon_" + id) === "true") {
+                    $(this).removeClass("product-links").addClass("selected");
+                }
+
+            });
+
+        });
+    </script>
+}
+
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
 <h1 class="text-center">Menu</h1>
 
@@ -26,7 +70,12 @@
                     <div class="product-bottom-details">
                         <div class="product-price">@sushi.Price лв.</div>
                         <div class="product-links">
-                            <a href=""><i class="fa fa-heart"></i></a>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a href="#" class="Favourite" id="fav-@sushi.Id" data-id="@sushi.Id">
+                                    <span id="icon-@sushi.Id"><i class="fa fa-heart"></i></span>
+                                </a>
+                            }
                             <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@sushi.Id"><i class="fa fa-shopping-cart"></i></a>
                         </div>
                     </div>
@@ -52,7 +101,9 @@
                     <div class="product-bottom-details">
                         <div class="product-price">@combo.Price лв.</div>
                         <div class="product-links">
-                            <a href=""><i class="fa fa-heart"></i></a>
+                            <a href="#" class="Favourite" id="fav-@combo.Id" data-id="@combo.Id">
+                                <span id="icon-@combo.Id"><i class="fa fa-heart"></i></span>
+                            </a>
                             <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@combo.Id"><i class="fa fa-shopping-cart"></i></a>
                         </div>
                     </div>
@@ -78,20 +129,22 @@
                     <div class="product-bottom-details">
                         <div class="product-price">@dessert.Price лв.</div>
                         <div class="product-links">
-                            <a href=""><i class="fa fa-heart"></i></a>
+                            <a href="#" class="Favourite" id="fav-@dessert.Id" data-id="@dessert.Id">
+                                <span id="icon-@dessert.Id"><i class="fa fa-heart"></i></span>
+                            </a>
                             <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@dessert.Id"><i class="fa fa-shopping-cart"></i></a>
                         </div>
                     </div>
                 </div>
             </div>
         }
-        @foreach (var beverages in Model.Beverages)
+        @foreach (var beverage in Model.Beverages)
         {
             <div class="product-card">
                 <div class="product-tumb">
-                    @if (beverages.ImageURL != null)
+                    @if (beverage.ImageURL != null)
                     {
-                        <img src="data:image/*;base64,@(Convert.ToBase64String(beverages.ImageURL))">
+                        <img src="data:image/*;base64,@(Convert.ToBase64String(beverage.ImageURL))">
                     }
                     else
                     {
@@ -100,12 +153,14 @@
                 </div>
                 <div class="product-details">
                     <span class="product-catagory">Beverage</span>
-                    <h4><a href="">@beverages.Name</a></h4>
+                    <h4><a href="">@beverage.Name</a></h4>
                     <div class="product-bottom-details">
-                        <div class="product-price">@beverages.Price лв.</div>
+                        <div class="product-price">@beverage.Price лв.</div>
                         <div class="product-links">
-                            <a href=""><i class="fa fa-heart"></i></a>
-                            <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@beverages.Id"><i class="fa fa-shopping-cart"></i></a>
+                            <a href="#" class="Favourite" id="fav-@beverage.Id" data-id="@beverage.Id">
+                                <span id="icon-@beverage.Id"><i class="fa fa-heart"></i></span>
+                            </a>
+                            <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@beverage.Id"><i class="fa fa-shopping-cart"></i></a>
                         </div>
                     </div>
                 </div>

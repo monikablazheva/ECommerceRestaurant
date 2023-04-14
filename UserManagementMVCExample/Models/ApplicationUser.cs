@@ -13,5 +13,7 @@ namespace UserManagementMVCExample.Models
         public byte[] ProfilePicture { get; set; }
         public ICollection<Order> CompletedOrders { get; set; }
 
+        public ICollection<Product> FavouriteProducts { get; set; }
+
     }
 }

@@ -18,16 +18,19 @@
                             // Successful requests get here
                             // Update the page elements
                             $('#row-' + data.DeleteId).fadeOut('slow');
-                            /*} else {
-                                $('#item-count-' + data.DeleteId).text(data.ItemCount);
-                            }*/
                             $('#cart-total').text(data.CartTotal);
-                            $('#update-message').text(data.Message);
+                            //$('#update-message').text(data.Message);
                             $('#cart-status').text('Cart (' + data.CartCount + ')');
-                        });
+                        }
+                    );
                 }
             });
         });
+        function myAlert() {
+            var x = document.getElementById("snackbar");
+            x.className = "show";
+            setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+        }
 
         function handleUpdate() {
             // Load and deserialize the returned JSON data
@@ -74,10 +77,6 @@
                     }
                     else{
                     $.post("@Url.Action("DecreaseCartItemCount","ShoppingCart")", { "cartItemId": id },
-                    /*$('.count').val(parseInt($('.count').val()) - 1);
-                    if ($('.count').val() == 0) {
-                        $('.count').val(1);
-                    }*/
                         function (data) {
                             // Successful requests get here
                             // Update the page elements
@@ -97,15 +96,17 @@
 }
 
 <h3>
-    <em>Review</em> your cart:
+    Review your cart:
  </h3>
     <div>
         <a asp-controller="ProductsMenu" asp-action="Index">Back to Menu</a>
     </div>
-<div id="update-message">
-</div>
-<table>
+
+<div id="snackbar">Item was removed</div>
+
+<table class="table" >
     <tr>
+        <th></th>
         <th>
             Name
         </th>
@@ -121,33 +122,45 @@
     {
         <tr id="row-@item.Id">
             <td>
+                <div class="cart-product-tumb">
+                    @if (item.Product.ImageURL != null)
+                    {
+                        <img src="data:image/*;base64,@(Convert.ToBase64String(item.Product.ImageURL))">
+                    }
+                    else
+                    {
+                        <img src="">
+                    }
+                </div>
+            </td>
+            <td>
                 @item.Product.Name
             </td>
             <td>
-                @item.Product.Price
+                @item.Product.Price лв.
             </td>
             <td id="item-count-@item.Id">
                 <div class="qty mt-2">
                     <span class="minus bg-dark" id="span-minus-@item.Id" data-id="@item.Id">-</span>
-                    <input type="number" class="count" id="count-@item.Id" data-id="@item.Id" name="qty" value="@item.Count">
+                    <input type="number" class="count Input" id="count-@item.Id" data-id="@item.Id" name="qty" value="@item.Count">
                     <span class="plus bg-dark" id="span-plus-@item.Id" data-id="@item.Id">+</span>
                 </div>
             </td>
             <td>
-                <a href="#" class="RemoveLink" data-id="@item.Id">Remove from cart</a>
+                <a href="#" class="RemoveLink" data-id="@item.Id" onclick="myAlert()">Remove from cart</a>
             </td>
         </tr>
     }
     <tr>
+        <td></td>
+        <td></td>
+        <td></td>
         <td>
-            Total
-        </td>
-        <td>
-        </td>
-        <td>
+            <h5>Total: </h5>
         </td>
         <td id="cart-total">
             @Model.CartTotal
         </td>
     </tr>
 </table>
+

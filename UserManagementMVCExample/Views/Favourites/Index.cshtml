@@ -1,0 +1,89 @@
+﻿@model IEnumerable<UserManagementMVCExample.Models.Product>
+@using UserManagementMVCExample.Areas.Identity.Pages.Account.Manage;
+
+@{
+    //ViewData["Title"] = "Favourite products";
+    //ViewData["ActivePage"] = ManageNavPages.Favourites;
+}
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(".Favourite").each(function (index) {
+
+                let id = $(this).attr("data-id");
+                let icon = $('#icon-' + id);
+
+                //console.log(id);
+                $('#fav-' + id).on("click", function () {
+                    if (id != '') {
+                        
+                        $.post("@Url.Action("AddRemoveFavourite","Favourites")", { "id": id },
+                            function (data) {
+                            if(data.success) {
+                                console.log(id);
+
+                                //localStorage.clear();
+                                $('#icon-' + id).removeClass("product-links").addClass("selected");
+                                localStorage.setItem("selected_icon_" + id, "true");
+                            }
+                            else {
+                                    console.log("remove");
+                                    //localStorage.clear();
+                                    $('#icon-' + id).removeClass('selected').addClass('product-links');
+                                    // Remove the corresponding item from local storage
+                                    localStorage.removeItem('selected_icon_' + id);
+                            }
+                        }
+                        );
+                    }
+                });
+                if (localStorage.getItem("selected_icon_" + id) === "true") {
+                    $(this).removeClass("product-links").addClass("selected");
+                }
+
+            });
+
+        });
+    </script>
+}
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+<h1 class="text-center">Favourites</h1>
+
+
+<div class="container ">
+    <div class="row">
+        @foreach(var product in Model) 
+        {
+            <div class="product-card">
+                <div class="product-tumb">
+                    @if (product.ImageURL != null)
+                    {
+                        <img src="data:image/*;base64,@(Convert.ToBase64String(product.ImageURL))">
+                    }
+                    else
+                    {
+                        <img src="">
+                    }
+                </div>
+                <div class="product-details">
+                    <span class="product-catagory">Sushi</span>
+                    <h4><a href="">@product.Name</a></h4>
+                    <div class="product-bottom-details">
+                        <div class="product-price">@product.Price лв.</div>
+                        <div class="product-links">
+                            <a href="#" class="Favourite" id="fav-@product.Id" data-id="@product.Id">
+                                <span id="icon-@product.Id"><i class="fa fa-heart"></i></span>
+                            </a>
+                            <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@product.Id"><i class="fa fa-shopping-cart"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+

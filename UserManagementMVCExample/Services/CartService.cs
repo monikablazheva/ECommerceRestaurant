@@ -167,12 +167,17 @@ namespace UserManagementMVCExample.Services
         {
             var cartItems = _context.CartItems.Include(c => c.Product).Where(c => c.CartId == ShoppingCartId);
             decimal? total = 0;
-            foreach(var cartItem in cartItems)
+            foreach (var cartItem in cartItems)
             {
                 total += cartItem.SubTotal();
             }
-
             return total ?? decimal.Zero;
+        }
+        public string GetTotalToString()
+        {
+            decimal? total = this.GetTotal();
+            string totalText = total.ToString() + " лв.";
+            return totalText;
         }
     }
 }
