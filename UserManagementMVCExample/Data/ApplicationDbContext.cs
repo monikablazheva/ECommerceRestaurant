@@ -57,13 +57,15 @@ namespace UserManagementMVCExample.Data
                             .HasForeignKey(c => c.SushiID)
                             .OnDelete(DeleteBehavior.NoAction);
         }
-        public DbSet<Order> Orders { get; set; }
+        public DbSet<Product> Products { get; set; }
         public DbSet<Sushi> Sushis { get; set; }
         public DbSet<Beverage> Beverages { get; set; }
         public DbSet<Dessert> Desserts { get; set; }
         public DbSet<Combo> Combos { get; set; }
         public DbSet<SushiAssignmentViewModel> SushiAssignments { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
-        public DbSet<Product> Products { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrdersItem> OrdersItems { get; set; }
+        
     }
 }

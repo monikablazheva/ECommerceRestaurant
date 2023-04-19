@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UserManagementMVCExample.Data;
 
@@ -11,9 +12,10 @@ using UserManagementMVCExample.Data;
 namespace UserManagementMVCExample.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230414120424_OrderIsPaidNotRequired")]
+    partial class OrderIsPaidNotRequired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -290,7 +292,7 @@ namespace UserManagementMVCExample.Migrations
                     b.Property<string>("CustomerId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime?>("Date")
+                    b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DeliveryAdress")
@@ -304,46 +306,11 @@ namespace UserManagementMVCExample.Migrations
                     b.Property<bool?>("IsPaid")
                         .HasColumnType("bit");
 
-                    b.Property<int>("OrderStatus")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Total")
-                        .HasColumnType("decimal(18,2)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
 
                     b.ToTable("Orders", "Identity");
-                });
-
-            modelBuilder.Entity("UserManagementMVCExample.Models.OrdersItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("OrdersItems", "Identity");
                 });
 
             modelBuilder.Entity("UserManagementMVCExample.Models.Product", b =>
@@ -528,25 +495,6 @@ namespace UserManagementMVCExample.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("UserManagementMVCExample.Models.OrdersItem", b =>
-                {
-                    b.HasOne("UserManagementMVCExample.Models.Order", "Order")
-                        .WithMany("OrdersItems")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("UserManagementMVCExample.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("UserManagementMVCExample.Models.ViewModels.SushiAssignmentViewModel", b =>
                 {
                     b.HasOne("UserManagementMVCExample.Models.Combo", "Combo")
@@ -569,11 +517,6 @@ namespace UserManagementMVCExample.Migrations
             modelBuilder.Entity("UserManagementMVCExample.Models.ApplicationUser", b =>
                 {
                     b.Navigation("CompletedOrders");
-                });
-
-            modelBuilder.Entity("UserManagementMVCExample.Models.Order", b =>
-                {
-                    b.Navigation("OrdersItems");
                 });
 
             modelBuilder.Entity("UserManagementMVCExample.Models.Combo", b =>

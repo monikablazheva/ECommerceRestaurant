@@ -38,7 +38,6 @@
             var data = Sys.Serialization.JavaScriptSerializer.deserialize(json);
             // Update the page elements
                 $('#row-' + data.DeleteId).fadeOut('slow');
-                $('#item-count-' + data.DeleteId).text(data.ItemCount);
             $('#cart-total').text(data.CartTotal);
             $('#update-message').text(data.Message);
             $('#cart-status').text('Cart (' + data.CartCount + ')');
@@ -160,6 +159,15 @@
         </td>
         <td id="cart-total">
             @Model.CartTotal
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>
+            <a asp-controller="Order" asp-action="MakeAnOrder" type="button" class="btn btn-primary">Checkout</a>
         </td>
     </tr>
 </table>

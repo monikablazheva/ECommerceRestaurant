@@ -179,5 +179,32 @@ namespace UserManagementMVCExample.Services
             string totalText = total.ToString() + " лв.";
             return totalText;
         }
+
+        public void CreateOrder(Order order)
+        {
+            decimal orderTotal = 0;
+
+            var cartItems = GetCartItems();
+
+            foreach (var item in cartItems)
+            {
+                var orderItem = new OrdersItem
+                {
+                    Order = order,
+                    Product = item.Product,
+                    Count = item.Count,
+                    Price = item.SubTotal()
+                };
+                orderTotal += item.SubTotal();
+
+                _context.OrdersItems.Add(orderItem);
+
+            }
+            order.Total = orderTotal;
+
+            _context.SaveChanges();
+
+            EmptyCart();
+        }
     }
 }

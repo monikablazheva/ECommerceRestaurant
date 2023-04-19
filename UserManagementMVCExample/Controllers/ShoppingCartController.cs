@@ -57,6 +57,8 @@ namespace UserManagementMVCExample.Controllers
             // Go back to the main store page for more shopping
             return RedirectToAction(nameof(Index));
         }
+
+        [Authorize(Roles = "SuperAdmin, Admin, Basic, Moderator")]
         [HttpPost]
         public ActionResult RemoveFromCart(int cartItemId)
         {
@@ -81,7 +83,8 @@ namespace UserManagementMVCExample.Controllers
             return Json(results);
         }
 
-        //[HttpPost]
+        [Authorize(Roles = "SuperAdmin, Admin, Basic, Moderator")]
+        [HttpPost]
         public ActionResult IncreaseCartItemCount(int cartItemId)
         {
             var cart = shoppingCart;
@@ -95,7 +98,8 @@ namespace UserManagementMVCExample.Controllers
             return Json(results);
         }
 
-        //[HttpPost]
+        [Authorize(Roles = "SuperAdmin, Admin, Basic, Moderator")]
+        [HttpPost]
         public ActionResult DecreaseCartItemCount(int cartItemId)
         {
             var cart = shoppingCart;

@@ -1,0 +1,83 @@
+﻿@model IEnumerable<UserManagementMVCExample.Models.Order>
+
+@{
+    ViewData["Title"] = "List of orders";
+}
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $(".RemoveLink").click(function () {
+                var recordToDelete = $(this).attr("data-id");
+                if (recordToDelete != '') {
+                    console.log(JSON.parse(JSON.stringify(recordToDelete)))
+                    $.post("@Url.Action("DeleteOrder","Order")", { "orderId": recordToDelete },
+                        function (data) {
+                            console.log("hi");
+                            $('#row-' + data.DeleteId).fadeOut('slow');
+                        }
+                    );
+                }
+            });
+        });
+        function handleUpdate() {
+            // Load and deserialize the returned JSON data
+            var json = context.get_data();
+            var data = Sys.Serialization.JavaScriptSerializer.deserialize(json);
+            // Update the page elements
+            $('#row-' + data.DeleteId).fadeOut('slow');
+        }
+        function myAlert() {
+            var x = document.getElementById("snackbar");
+            x.className = "show";
+            setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+        }
+    </script>
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<div id="snackbar">Order was deleted</div>
+
+<table class="table">
+    <tr>
+        <th>Date</th>
+        <th>
+            Order's status
+        </th>
+        <th>
+            Products
+        </th>
+        <th>
+            Total
+        </th>
+        <th></th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr id="row-@item.Id">
+            <td>
+                @item.Date
+            </td>
+            <td>
+                @item.OrderStatus
+            </td>
+            <td>
+                @{
+                    foreach (var product in item.OrdersItems)
+                    {
+                            @product.Product.Name @: @product.Count <br />
+                    }
+                }
+            </td>
+            <td>@item.Total</td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+            </td>
+            <td>
+                <a href="#" class="RemoveLink" data-id="@item.Id" onclick="myAlert()"><i class="fa fa-remove"></i></a>
+            </td>
+        </tr>
+    }
+</table>
+
