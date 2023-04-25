@@ -63,15 +63,11 @@ namespace UserManagementMVCExample.Controllers
         public ActionResult RemoveFromCart(int cartItemId)
         {
             var cart = shoppingCart;
-
-            // Get the name of the product to display confirmation
             var productName = _context.CartItems.Include(p => p.Product)
                 .FirstOrDefault(p => p.Id == cartItemId).Product.Name;
 
-            // Remove from cart
             cart.RemoveFromCart(cartItemId);
 
-            // Display the confirmation message
             var results = new ShoppingCartRemoveViewModel
             {
                 Message = WebUtility.HtmlEncode(productName) +

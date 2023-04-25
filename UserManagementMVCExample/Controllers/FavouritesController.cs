@@ -44,8 +44,8 @@ namespace UserManagementMVCExample.Controllers
 
             ClaimsPrincipal currentUser = this.User;
             var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var user = await _userManager.Users.Include(u => u.FavouriteProducts).FirstOrDefaultAsync(u => u.Id == currentUserId);
-
+            var user = await _userManager.Users.Include(u => u.FavouriteProducts).
+                             FirstOrDefaultAsync(u => u.Id == currentUserId);
 
             Product favouriteProduct = user.FavouriteProducts.FirstOrDefault(p => p.Id == id);
             if(favouriteProduct == null)
@@ -65,7 +65,6 @@ namespace UserManagementMVCExample.Controllers
 
                 IsFav = false;
             }
-
 
             return Json(new { success = IsFav });
         }

@@ -167,7 +167,14 @@
         <td></td>
         <td></td>
         <td>
-            <a asp-controller="Order" asp-action="MakeAnOrder" type="button" class="btn btn-primary">Checkout</a>
+            @if(Model.CartTotal == "0 лв.")
+            {
+                <button asp-controller="Order" asp-action="MakeAnOrder" type="button" class="btn btn-primary" disabled>Checkout</button>
+            }
+            else
+            {
+                <a asp-controller="Order" asp-action="MakeAnOrder" type="button" class="btn btn-primary">Checkout</a>
+            }
         </td>
     </tr>
 </table>

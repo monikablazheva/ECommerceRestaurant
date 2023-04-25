@@ -26,6 +26,8 @@ namespace UserManagementMVCExample.Areas.Identity.Pages.Account.Manage
 
         public static string Favourites => "Favourites";
 
+        public static string Orders => "Orders";
+
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
 
         public static string EmailNavClass(ViewContext viewContext) => PageNavClass(viewContext, Email);
@@ -43,6 +45,8 @@ namespace UserManagementMVCExample.Areas.Identity.Pages.Account.Manage
         public static string TwoFactorAuthenticationNavClass(ViewContext viewContext) => PageNavClass(viewContext, TwoFactorAuthentication);
 
         public static string FavouritesNavClass(ViewContext viewContext) => PageNavClass(viewContext, Favourites);
+
+        public static string OrdersNavClass(ViewContext viewContext) => PageNavClass(viewContext, Orders);
 
         private static string PageNavClass(ViewContext viewContext, string page)
         {

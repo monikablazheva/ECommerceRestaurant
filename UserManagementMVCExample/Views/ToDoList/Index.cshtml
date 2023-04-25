@@ -1,0 +1,38 @@
+﻿@using UserManagementMVCExample.Enums;
+
+@model IEnumerable<UserManagementMVCExample.Models.Order>
+@{
+    ViewData["Title"] = "Orders To-Do List";
+}
+
+<link href="/css/todolist.css" rel="stylesheet" />
+
+<ul class="mylist" id="myUL">
+    @foreach(var order in Model)
+    {
+        if (order.OrderStatus == UserManagementMVCExample.Enums.OrdersStatus.Confirmed) 
+        {
+            <li href="#" id="row-@order.Id" class="RemoveLink" data-id="@order.Id">@order.DeliveryAdress - @order.DeliveryTime</li>
+        }
+    }
+</ul>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $(".RemoveLink").click(function () {
+                var recordToUpdate = $(this).attr("data-id");
+
+                if (recordToUpdate != '') {
+                    console.log(JSON.parse(JSON.stringify(recordToUpdate)))
+                    $.post("@Url.Action("UpdateStatus","ToDoList")", { "id": recordToUpdate },
+                        function (data) {
+                            $('#row-' + data.updatedStatusId).fadeOut('slow');
+                        }
+                    );
+                }
+                //$("body").load("Url.Action("Index","Order")");
+            });
+        });
+    </script>
+}

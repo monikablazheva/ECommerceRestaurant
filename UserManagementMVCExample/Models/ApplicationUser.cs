@@ -8,7 +8,6 @@ namespace UserManagementMVCExample.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string HomeAdress { get; set; }
         public int UsernameChangeLimit { get; set; } = 10;
         public byte[] ProfilePicture { get; set; }
         public ICollection<Order> CompletedOrders { get; set; }

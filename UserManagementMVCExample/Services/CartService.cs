@@ -66,7 +66,8 @@ namespace UserManagementMVCExample.Services
 
         public void AddToCart(Product product)
         {
-            var cartItem = _context.CartItems.Include(c =>c.Product).SingleOrDefault(c => c.CartId == ShoppingCartId && c.ProductId == product.Id);
+            var cartItem = _context.CartItems.Include(c =>c.Product)
+                            .SingleOrDefault(c => c.CartId == ShoppingCartId && c.ProductId == product.Id);
 
             if (cartItem == null)
             {
@@ -165,7 +166,8 @@ namespace UserManagementMVCExample.Services
         }
         public decimal GetTotal()
         {
-            var cartItems = _context.CartItems.Include(c => c.Product).Where(c => c.CartId == ShoppingCartId);
+            var cartItems = _context.CartItems.Include(c => c.Product)
+                .Where(c => c.CartId == ShoppingCartId);
             decimal? total = 0;
             foreach (var cartItem in cartItems)
             {

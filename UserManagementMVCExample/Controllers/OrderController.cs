@@ -43,7 +43,9 @@ namespace UserManagementMVCExample.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Orders.Include(o => o.Customer).Include(o=>o.OrdersItems).ThenInclude(i=>i.Product).ToListAsync());
+            var user = GetCustomer();
+            return View(await _context.Orders.Include(o => o.Customer).Include(o=>o.OrdersItems).ThenInclude(i=>i.Product)
+                        .Where(o => o.Customer == user).ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)
