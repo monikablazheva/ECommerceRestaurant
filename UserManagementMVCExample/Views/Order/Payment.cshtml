@@ -36,27 +36,37 @@
     </script>
 }
     <form method="post" asp-action="Payment" id="payment-form">
+        <h1>Make an order</h1>
+        <h4>
+            We are going to use your profile name, email and phone number for delivery information.
+            You only need to enter the delivery address and the time of delivery
+        </h4>
         <div class="wrapper">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="DeliveryAdress" class="control-label"></label>
+                <input asp-for="DeliveryAdress" class="form-control" />
+                <span asp-validation-for="DeliveryAdress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeliveryTime" class="control-label"></label>
+                <input asp-for="DeliveryTime" class="form-control" />
+                <span asp-validation-for="DeliveryTime" class="text-danger"></span>
+            </div>
             <div class="checkout container">
                 <header>
-                    <h1 class="text-info">Make a transaction for your delivery</h1>
-                    <h4 class="text-success">
+                    <h4 class="text-info">
+                        Make a transaction for your delivery.
                         You can use credit card or paypal
                     </h4>
-                    <p>Delivery address: @Model.DeliveryAdress</p>
-                    <p>Delivery time: @Model.DeliveryTime</p>
-                    <p>Name: @Model.Customer.FirstName @Model.Customer.LastName</p>
-                    <p>Phone number: @Model.Customer.PhoneNumber</p>
-                    <p>Email: @Model.Customer.Email</p>
                 </header>
                 <section>
                     <div class="bt-drop-in-wrapper">
                         <div id="bt-dropin"></div>
                     </div>
                 </section>
-                <input name="orderId" value="@Model.Id" type="hidden" />
                 <input id="nonce" name="payment_method_nonce" type="hidden" />
-                <button class="btn btn-primary" id="submit-button"><span>Test transaction</span></button>
+                <button class="btn btn-primary" id="submit-button"><span>Order and pay</span></button>
             </div>
         </div>
     </form>

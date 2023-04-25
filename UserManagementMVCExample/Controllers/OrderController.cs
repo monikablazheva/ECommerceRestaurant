@@ -61,81 +61,66 @@ namespace UserManagementMVCExample.Controllers
             }
             return View(order);
         }
-        public IActionResult MakeAnOrder()
+
+        public IActionResult Payment()
         {
+            var gateway = _brainTree.GetGateway();
+            var clientToken = gateway.ClientToken.Generate();
+
+            ViewBag.ClientToken = clientToken;
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> MakeAnOrder([Bind("Id,DeliveryAdress,DeliveryTime")] Order order)
+        public async Task<IActionResult> Payment(IFormCollection formCollection, [Bind("Id,DeliveryAdress,DeliveryTime")] Order order)
         {
             if (ModelState.IsValid)
             {
                 order.Customer = this.GetCustomer();
                 order.Date = DateTime.Now;
+
                 _context.Orders.Add(order);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction("Payment", new { orderId = order.Id });
-            }
-            return View(order);
-        }
-
-        public async Task<IActionResult> Payment(int orderId)
-        {
-            Order orderFromDb = await _context.Orders.Include(o => o.Customer).FirstOrDefaultAsync(o => o.Id == orderId);
-
-            var gateway = _brainTree.GetGateway();
-            var clientToken = gateway.ClientToken.Generate();
-
-            ViewBag.ClientToken = clientToken;
-            return View(orderFromDb);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Payment(IFormCollection formCollection)
-        {
-            int orderId = int.Parse(formCollection["orderId"]);
-            Order orderFromDb = await _context.Orders.Include(o => o.Customer).FirstOrDefaultAsync(o => o.Id == orderId);
-
-            var total = shoppingCart.GetTotal();
-            string nonceFromTheClient = formCollection["payment_method_nonce"];
-            var request = new TransactionRequest
-            {
-                Amount = total,
-                PaymentMethodNonce = nonceFromTheClient,
-                OrderId = orderFromDb.Id.ToString(),
-                Options = new TransactionOptionsRequest
+                var total = shoppingCart.GetTotal();
+                string nonceFromTheClient = formCollection["payment_method_nonce"];
+                var request = new TransactionRequest
                 {
-                    SubmitForSettlement = true
+                    Amount = total,
+                    PaymentMethodNonce = nonceFromTheClient,
+                    OrderId = order.Id.ToString(),
+                    Options = new TransactionOptionsRequest
+                    {
+                        SubmitForSettlement = true
+                    }
+                };
+
+                var gateway = _brainTree.GetGateway();
+                Result<Transaction> result = gateway.Transaction.Sale(request);
+
+                if (result.Target.ProcessorResponseText == "Approved")
+                {
+                    /*TempData["Success"] = "Transaction was successful. ID: " + result.Target.Id +
+                                            ". Amount charged: " + result.Target.Amount;*/
+                    order.IsPaid = true;
+                    order.OrderStatus = OrdersStatus.Confirmed;
+
+                    shoppingCart.CreateOrder(order);
+
+                    _context.Update(order);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction("Details", new { id = order.Id });
                 }
-            };
-
-            var gateway = _brainTree.GetGateway();
-            Result<Transaction> result = gateway.Transaction.Sale(request);
-
-            if (result.Target.ProcessorResponseText == "Approved")
-            {
-                /*TempData["Success"] = "Transaction was successful. ID: " + result.Target.Id +
-                                        ". Amount charged: " + result.Target.Amount;*/
-                orderFromDb.IsPaid = true;
-                orderFromDb.OrderStatus = OrdersStatus.Confirmed;
-                
-                shoppingCart.CreateOrder(orderFromDb);
-
-                _context.Update(orderFromDb);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction("Details", new { id = orderFromDb.Id });
+                else
+                {
+                    order.OrderStatus = OrdersStatus.Cancelled;
+                    TempData["Unsuccessful"] = "Transaction was unsuccessful. Please try again";
+                    return RedirectToAction("Payment", new { orderId = order.Id });
+                }
             }
-            else
-            {
-                orderFromDb.OrderStatus = OrdersStatus.Cancelled;
-                TempData["Unsuccessful"] = "Transaction was unsuccessful. Please try again";
-                return RedirectToAction("Payment", new { orderId = orderFromDb.Id });
-            }
+            return NotFound();
         }
 
         [HttpPost]
