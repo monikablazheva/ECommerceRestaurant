@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using UserManagementMVCExample.Data;
 using UserManagementMVCExample.Enums;
 using UserManagementMVCExample.Models;
@@ -59,10 +60,19 @@ namespace UserManagementMVCExample.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Count,Type,Price")] Sushi sushi) //Create POST
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Count,Type,Price,ImageURL")] Sushi sushi) //Create POST
         {
             if (ModelState.IsValid)
             {
+                if (Request.Form.Files.Count > 0)
+                {
+                    IFormFile file = Request.Form.Files.FirstOrDefault();
+                    using (var dataStream = new MemoryStream())
+                    {
+                        await file.CopyToAsync(dataStream);
+                        sushi.ImageURL = dataStream.ToArray();
+                    }
+                }
                 _context.Add(sushi);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
