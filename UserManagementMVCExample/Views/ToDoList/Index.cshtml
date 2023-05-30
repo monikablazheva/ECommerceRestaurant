@@ -6,13 +6,19 @@
 }
 
 <link href="/css/todolist.css" rel="stylesheet" />
-
+<h2 class="text-warning text-center">Orders to do</h2>
+<h6 class="text-center">When the order is give to the delivery guy mark it as "Shipped" by clicking on it once. Then it will fade out.</h6>
+<br />
 <ul class="mylist" id="myUL">
     @foreach(var order in Model)
     {
         if (order.OrderStatus == UserManagementMVCExample.Enums.OrdersStatus.Confirmed) 
         {
-            <li href="#" id="row-@order.Id" class="RemoveLink" data-id="@order.Id">@order.DeliveryAdress - @order.DeliveryTime</li>
+            <li href="#" id="row-@order.Id" class="RemoveLink" data-id="@order.Id">@order.DeliveryAdress for @order.DeliveryTime :
+                @foreach(var item in order.OrdersItems) {
+                    <text> @item.Product.Name - @item.Count pcs. | </text>
+                }
+            </li>
         }
     }
 </ul>

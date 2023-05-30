@@ -1,6 +1,9 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
-
+ul{
+    margin-bottom: 0px !important;
+    margin-top: 0px !important;
+}
 a.navbar-brand {
   white-space: normal;
   text-align: center;
@@ -9,19 +12,47 @@ a.navbar-brand {
 
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+    color: #f7a355;
+}
+    a:hover {
+        color: #ff6600;
+    }
+.btn:focus, .btn:active {
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #f7a355;
+    border-color: #f7a355;
+}
+    .btn-primary:hover {
+        color: #fff;
+        background-color: #ff6633;
+        border-color: #ff6633;
+    }
+    .btn-primary:disabled {
+        background-color: #faca9e;
+        border-color: #faca9e;
+    }
+
+.btn-secondary {
+    color: #fff;
+    background-color: #faca9e;
+    border-color: #faca9e;
 }
 
+    .btn-secondary:hover {
+        color: #fff;
+        background-color: #f7a355;
+        border-color: #f7a355;
+    }
+
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #f7a355;
+    border-color: #f7a355;
 }
 
 /* Sticky footer styles

@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using UserManagementMVCExample.Data;
+using UserManagementMVCExample.Enums;
 using UserManagementMVCExample.Models;
 
 namespace UserManagementMVCExample.Controllers
 {
+    [Authorize(Roles = "SuperAdmin, Admin, Moderator")]
     public class ToDoListController : Controller
     {
         private readonly ApplicationDbContext _context;

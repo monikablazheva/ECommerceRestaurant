@@ -48,6 +48,7 @@
 
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
 <link href="/css/menu.css" rel="stylesheet" />
+<br />
 <h1 class="text-center">Menu</h1>
 
 <div class="container ">
@@ -102,9 +103,12 @@
                     <div class="product-bottom-details">
                         <div class="product-price">@combo.Price лв.</div>
                         <div class="product-links">
-                            <a href="#" class="Favourite" id="fav-@combo.Id" data-id="@combo.Id">
-                                <span id="icon-@combo.Id"><i class="fa fa-heart"></i></span>
-                            </a>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a href="#" class="Favourite" id="fav-@combo.Id" data-id="@combo.Id">
+                                    <span id="icon-@combo.Id"><i class="fa fa-heart"></i></span>
+                                </a>
+                            }
                             <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@combo.Id"><i class="fa fa-shopping-cart"></i></a>
                         </div>
                     </div>
@@ -130,9 +134,12 @@
                     <div class="product-bottom-details">
                         <div class="product-price">@dessert.Price лв.</div>
                         <div class="product-links">
-                            <a href="#" class="Favourite" id="fav-@dessert.Id" data-id="@dessert.Id">
-                                <span id="icon-@dessert.Id"><i class="fa fa-heart"></i></span>
-                            </a>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a href="#" class="Favourite" id="fav-@dessert.Id" data-id="@dessert.Id">
+                                    <span id="icon-@dessert.Id"><i class="fa fa-heart"></i></span>
+                                </a>
+                            }
                             <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@dessert.Id"><i class="fa fa-shopping-cart"></i></a>
                         </div>
                     </div>
@@ -158,9 +165,12 @@
                     <div class="product-bottom-details">
                         <div class="product-price">@beverage.Price лв.</div>
                         <div class="product-links">
-                            <a href="#" class="Favourite" id="fav-@beverage.Id" data-id="@beverage.Id">
-                                <span id="icon-@beverage.Id"><i class="fa fa-heart"></i></span>
-                            </a>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a href="#" class="Favourite" id="fav-@beverage.Id" data-id="@beverage.Id">
+                                    <span id="icon-@beverage.Id"><i class="fa fa-heart"></i></span>
+                                </a>
+                            }
                             <a asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@beverage.Id"><i class="fa fa-shopping-cart"></i></a>
                         </div>
                     </div>

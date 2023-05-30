@@ -11,7 +11,9 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">LotusSushi</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img style="width:40px;height:40px; object-fit:cover; border-radius:30px" src="/images/noun-lotus-14165-2.png">
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -37,7 +39,6 @@
 
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" asp-controller="UserRoles" asp-action="Index"><i class="bi bi-camera-reels"></i>Users</a>
-                                    <a class="dropdown-item" asp-controller="RoleManager" asp-action="Index"><i class="bi bi-headset"></i>Roles</a>
                                 </div>
                             </li>
                         }
@@ -53,6 +54,18 @@
                                     <a class="dropdown-item" asp-controller="Combos" asp-action="Index"><i class="bi bi-camera-reels"></i>Combos</a>
                                     <a class="dropdown-item" asp-controller="Desserts" asp-action="Index"><i class="bi bi-camera-reels"></i>Desserts</a>
                                     <a class="dropdown-item" asp-controller="Beverages" asp-action="Index"><i class="bi bi-camera-reels"></i>Beverages</a>
+                                </div>
+                            </li>
+                        }
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("SuperAdmin") || User.IsInRole("Moderator"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="bi bi-gear"></i> To-Do List
+                                </a>
+
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" asp-controller="ToDoList" asp-action="Index"><i class="bi bi-camera-reels"></i>Orders</a>
                                 </div>
                             </li>
                         }

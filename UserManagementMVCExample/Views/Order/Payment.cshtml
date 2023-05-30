@@ -36,11 +36,12 @@
     </script>
 }
     <form method="post" asp-action="Payment" id="payment-form">
-        <h1>Make an order</h1>
-        <h4>
+        <br />
+        <h4 class="text-warning">Make an order</h4>
+        <h6>
             We are going to use your profile name, email and phone number for delivery information.
             You only need to enter the delivery address and the time of delivery
-        </h4>
+        </h6>
         <div class="wrapper">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -50,15 +51,15 @@
             </div>
             <div class="form-group">
                 <label asp-for="DeliveryTime" class="control-label"></label>
-                <input asp-for="DeliveryTime" class="form-control" />
+                <input type="time" min="@DateTime.Now.TimeOfDay.ToString()" max="22:00" asp-for="DeliveryTime" class="form-control" />
                 <span asp-validation-for="DeliveryTime" class="text-danger"></span>
             </div>
             <div class="checkout container">
                 <header>
-                    <h4 class="text-info">
+                    <h6>
                         Make a transaction for your delivery.
                         You can use credit card or paypal
-                    </h4>
+                    </h6>
                 </header>
                 <section>
                     <div class="bt-drop-in-wrapper">

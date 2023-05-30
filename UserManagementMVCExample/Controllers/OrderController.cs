@@ -73,7 +73,8 @@ namespace UserManagementMVCExample.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Payment(IFormCollection formCollection, [Bind("Id,DeliveryAdress,DeliveryTime")] Order order)
+        public async Task<IActionResult> Payment(IFormCollection formCollection, 
+                            [Bind("Id,DeliveryAdress,DeliveryTime")] Order order)
         {
             if (ModelState.IsValid)
             {
@@ -101,8 +102,6 @@ namespace UserManagementMVCExample.Controllers
 
                 if (result.Target.ProcessorResponseText == "Approved")
                 {
-                    /*TempData["Success"] = "Transaction was successful. ID: " + result.Target.Id +
-                                            ". Amount charged: " + result.Target.Amount;*/
                     order.IsPaid = true;
                     order.OrderStatus = OrdersStatus.Confirmed;
 

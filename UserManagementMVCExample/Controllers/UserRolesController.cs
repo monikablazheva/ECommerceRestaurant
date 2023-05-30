@@ -44,7 +44,7 @@ namespace UserManagementMVCExample.Controllers
         }
         public async Task<IActionResult> Manage(string userId)
         {
-            ViewBag.UserId = userId; //The ViewBag in ASP.NET MVC is used to transfer temporary data (which is not included in the model) from the controller to the view. Internally, it is a dynamic type property of the ControllerBase class which is the base class of the Controller class.
+            ViewBag.UserId = userId;
             var user = await _userManager.FindByIdAsync(userId);
             if(user == null)
             {
