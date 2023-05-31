@@ -33,17 +33,17 @@ namespace UserManagementMVCExample.Controllers
             _brainTree = brainTree;
             _httpContextAccessor = httpContextAccessor;
         }
-        public ApplicationUser GetCustomer()
+        public async Task<ApplicationUser> GetCustomer()
         {
             ClaimsPrincipal currentUser = this.User;
             var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var user = _userManager.Users.Include(u => u.CompletedOrders).FirstOrDefault(u => u.Id == currentUserId);
+            var user = await _userManager.Users.Include(u => u.CompletedOrders).FirstOrDefaultAsync(u => u.Id == currentUserId);
             return user;
         }
 
         public async Task<IActionResult> Index()
         {
-            var user = GetCustomer();
+            var user = await GetCustomer();
             return View(await _context.Orders.Include(o => o.Customer).Include(o=>o.OrdersItems).ThenInclude(i=>i.Product)
                         .Where(o => o.Customer == user).ToListAsync());
         }
@@ -78,7 +78,7 @@ namespace UserManagementMVCExample.Controllers
         {
             if (ModelState.IsValid)
             {
-                order.Customer = this.GetCustomer();
+                order.Customer = await this.GetCustomer();
                 order.Date = DateTime.Now;
 
                 _context.Orders.Add(order);
