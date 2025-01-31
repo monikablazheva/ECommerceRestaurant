@@ -17,6 +17,7 @@ namespace UserManagementMVCExample.Models
         public int ProductId { get; set; }
 
         [Required]
+        [Range(1, 1000, ErrorMessage = "Price must be between 1 and 1000.")]
         public int Count { get; set; }
 
         [Required]

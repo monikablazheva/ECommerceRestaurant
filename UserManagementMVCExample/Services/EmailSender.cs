@@ -16,7 +16,7 @@ namespace UserManagementMVCExample.Services
                 EnableSsl = true,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential("lotusushi.restaurant@gmail.com", "wrzroclnxrmlijco")
+                Credentials = new NetworkCredential("lotusushi.restaurant@gmail.com", "")
             };
 
             return client.SendMailAsync("lotusushi.restaurant@gmail.com", email, subject, htmlMessage);

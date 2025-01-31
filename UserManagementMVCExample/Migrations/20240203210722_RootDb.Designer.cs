@@ -12,8 +12,8 @@ using UserManagementMVCExample.Data;
 namespace UserManagementMVCExample.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230416083303_OrdersItems")]
-    partial class OrdersItems
+    [Migration("20240203210722_RootDb")]
+    partial class RootDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -193,9 +193,6 @@ namespace UserManagementMVCExample.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("HomeAdress")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")

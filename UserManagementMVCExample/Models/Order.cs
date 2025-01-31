@@ -20,12 +20,14 @@ namespace UserManagementMVCExample.Models
 
         public DateTime? Date { get; set; }
 
-        public ApplicationUser? Customer { get; set; }
+        public ApplicationUser Customer { get; set; }
 
         public bool? IsPaid { get; set; }
 
         public OrdersStatus OrderStatus { get; set; }
 
+
+        [Range(1, 100000, ErrorMessage = "Total must be between 1 and 100000.")]
         public decimal Total { get; set; }
 
         public ICollection<OrdersItem> OrdersItems { get; set; }
